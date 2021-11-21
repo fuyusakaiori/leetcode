@@ -1,134 +1,135 @@
-package chapter03;
+package chapter03.travel;
 
 import utils.TreeNode;
 
 /**
- * <h2>Morris 遍历</h2>
- * <p>特点: 1.时间复杂度为 O(N) 2. 空间复杂度为 O(1)</p>
- * <p>细节: 此前递归和非递归的遍历的空间复杂度都是 O(1), 采用这种方式实现的遍历可以达到空间复杂度为 O(1)</p>
+ * <h2>Morris 算法遍历树结构</h2>
+ * <p>时间复杂度: O(N)</p>
+ * <p>空间复杂度: O(1)</p>
  */
-public class Morris
+public class BinaryTreeMorris
 {
     public static void main(String[] args)
     {
-        TreeNode root = getInstance();
-        morris(root);
-        System.out.println();
-        preMorris(root);
-        System.out.println();
-        infixMorris(root);
-        System.out.println();
-        postMorris(root);
+
     }
 
     /**
-     * 产生 Morris 序
-     * @param root 树的根结点
+     * 产生 Morris 序的算法
+     * @param root 根结点
      */
     private static void morris(TreeNode root){
+        // 遍历树的临时变量
         TreeNode current = root;
+        // 记录左子树的最右结点
         TreeNode mostRight = null;
         while (current != null){
-            System.out.print(current.value + "\t");
-            // 1. 如果左子树存在
+            // 1. 如果结点的左子树不为空, 那么向左侧移动
             if (current.left != null){
-                // 3. 找到左子树的最右结点
                 mostRight = current.left;
-                // 3.1 第一个条件是用于终止第一次到达可到达两次的结点
-                // 3.2 第二个条件是用于终止第二次到达可到达两次的结点
+                // 3. 开始循环遍历, 找到左子树的最右结点
                 while (mostRight.right != null && mostRight.right != current)
                     mostRight = mostRight.right;
-                // 4. 如果左子树的最右结点的右指针指向空, 那么就让其指向当前结点, 向左移动, 重复上述行为
-                if (mostRight.right == null) {
-                    mostRight.right = current;
-                    current = current.left;
-                    continue;
-                }
-                // 5. 如果左子树的最右结点的右指针指向当前结点. 那么就让其指向空, 然后向右移动
-                else{
-                    mostRight.right = null;
-                }
-            }
-
-            // 2. 如果左子树不存在, 就直接向右移动
-            current = current.right;
-
-        }
-
-    }
-
-    /**
-     * Morris 序生成前序遍历
-     * @param root 树的根结点
-     */
-    private static void preMorris(TreeNode root){
-        TreeNode current = root;
-        TreeNode mostRight = null;
-        while(current != null){
-            if (current.left != null){
-                mostRight = current.left;
-                while(mostRight.right != null && mostRight.right != current)
-                    mostRight = mostRight.right;
+                // 4. 判断最右结点的右指针是否指向空
                 if (mostRight.right == null){
-                    System.out.print(current.value + "\t");
+                    // 4.1 将最右结点的右指针指向当前结点
                     mostRight.right = current;
+                    // 4.2 然后继续向左移动
                     current = current.left;
                     continue;
                 }else{
+                    // 5. 最右结点的右指针不指向空的话, 就将指针指向空
                     mostRight.right = null;
                 }
-            }else{
-                System.out.print(current.value + "\t");
             }
+            // 2. 如果结点的左子树为空, 那么向右侧移动
             current = current.right;
         }
     }
 
     /**
-     * Morris 序生成中序遍历
-     * @param root 树的根结点
+     * 借助 Morris 算法产生前序
+     * @param root 根结点
      */
-    private static void infixMorris(TreeNode root){
+    private static void premorris(TreeNode root){
         TreeNode current = root;
         TreeNode mostRight = null;
+
         while (current != null){
             if (current.left != null){
                 mostRight = current.left;
                 while (mostRight.right != null && mostRight.right != current)
                     mostRight = mostRight.right;
                 if (mostRight.right == null){
+                    // 第一次到达可以到达两次的结点时, 立刻输出
+                    System.out.print(current.value + "->");
                     mostRight.right = current;
                     current = current.left;
                     continue;
                 }else{
-                    System.out.print(current.value + "\t");
+                    // 第二次就不需要继续输出
                     mostRight.right = null;
                 }
             }else{
-                System.out.print(current.value + "\t");
+                // 只能够到达一次的结点就立刻输出
+                System.out.print(current.value + "->");
             }
             current = current.right;
         }
-
     }
 
     /**
-     * Morris 序生成后序遍历
-     * @param root 树的根结点
+     * 借助 Morris 算法产生中序
+     * @param root 根结点
      */
-    private static void postMorris(TreeNode root){
+    private static void infixmorris(TreeNode root){
         TreeNode current = root;
         TreeNode mostRight = null;
+
         while (current != null){
             if (current.left != null){
                 mostRight = current.left;
                 while (mostRight.right != null && mostRight.right != current)
                     mostRight = mostRight.right;
                 if (mostRight.right == null){
+                    // 第一次到达可以到达两次的结点时, 不做任何输出
                     mostRight.right = current;
                     current = current.left;
                     continue;
                 }else{
+                    // 第二次到达的时候, 立刻输出
+                    mostRight.right = null;
+                    System.out.print(current.value + "->");
+                }
+            }else{
+                // 只能够到达一次的结点就立刻输出
+                System.out.print(current.value + "->");
+            }
+            current = current.right;
+        }
+    }
+
+    /**
+     * <p>借助 Morris 算法产生后序</p>
+     * <p>注: Morris 产生后序是比较麻烦的</p>
+     * @param root 根结点
+     */
+    private static void postmorrsi(TreeNode root){
+        TreeNode current = root;
+        TreeNode mostRight = null;
+
+        while (current != null){
+            if (current.left != null){
+                mostRight = current.left;
+                while (mostRight.right != null && mostRight.right != current)
+                    mostRight = mostRight.right;
+                if (mostRight.right == null){
+                    // 第一次到达可以到达两次的结点时, 不做任何输出
+                    mostRight.right = current;
+                    current = current.left;
+                    continue;
+                }else{
+                    // 第二次到达的时候, 立刻输出
                     mostRight.right = null;
                     printTree(current.left);
                 }
@@ -138,17 +139,9 @@ public class Morris
         printTree(root);
     }
 
-    private static void printTree(TreeNode root){
-        TreeNode tail = reverseTree(root);
-        TreeNode current = tail;
-        while (current != null){
-            System.out.print(current.value + "\t");
-            current = current.right;
-        }
-        assert tail != null;
-        reverseTree(tail);
-    }
-
+    /**
+     * Morris 序生成后序时, 需要在第二次到达结点时, 反序输出, 其余时候不做任何处理
+     */
     private static TreeNode reverseTree(TreeNode root){
         TreeNode previous = null;
         TreeNode current = root;
@@ -157,29 +150,21 @@ public class Morris
             current.right = previous;
             previous = current;
             current = next;
-            next = next != null ? next.right : null;
+            next = next != null ? next.right:null;
         }
-
         return previous;
     }
 
-    private static TreeNode getInstance(){
-        TreeNode root = new TreeNode(4);
-        TreeNode node1 = new TreeNode(2);
-        TreeNode node2 = new TreeNode(6);
-        TreeNode node3 = new TreeNode(1);
-        TreeNode node4 = new TreeNode(3);
-        TreeNode node5 = new TreeNode(5);
-        TreeNode node6 = new TreeNode(7);
-
-        root.left = node1;
-        node1.left = node3;
-        node1.right = node4;
-
-        root.right = node2;
-        node2.left = node5;
-        node2.right = node6;
-
-        return root;
+    /**
+     * 逆序输出
+     */
+    private static void printTree(TreeNode root){
+        TreeNode tail = reverseTree(root);
+        TreeNode current = tail;
+        while (current != null){
+            System.out.print(current.value + "->");
+            current = current.right;
+        }
+        reverseTree(tail);
     }
 }

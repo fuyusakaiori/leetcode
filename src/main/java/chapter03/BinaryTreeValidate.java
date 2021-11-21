@@ -5,7 +5,7 @@ import utils.TreeNode;
 import java.util.*;
 
 // 判断各种树
-public class TreeType
+public class BinaryTreeValidate
 {
     public static void main(String[] args)
     {

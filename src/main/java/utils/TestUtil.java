@@ -1,6 +1,7 @@
 package utils;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Random;
 import java.util.function.BiConsumer;
 import java.util.function.BiFunction;

@@ -123,15 +123,17 @@ public class BinaryTreeSerializable
         return root;
     }
 
-    // TODO 网上博客提到中序遍历似乎无法反序列化, 因为生成的树是不唯一的, 但是后序遍历貌似可以
-    private static String infixSerializable(TreeNode root){
-        if (root == null)
-            return "#_";
-        StringBuilder sb = new StringBuilder("");
-        sb.append(prefixSerializable(root.left));
-        sb.append(root.value).append("_");
-        sb.append(prefixSerializable(root.right));
-        return sb.toString();
+    // TODO 中序序列化是无法确定二叉树或者二叉搜索树的, 所以这种序列化方式是不可取的
+
+    // TODO 序列化二叉搜索树肯定是可以采用常规解法完成的, 但是显然可以利用二叉搜索树的性质进一步优化
+    private static String serializableBST(TreeNode root){
+
+        return null;
+    }
+
+    private static TreeNode deserializableBST(String data){
+
+        return null;
     }
 
     // TODO 第三个题目的要求比较奇怪, 必须在不重构树的情况下, 判断这个前序序列化是否有效

@@ -1,4 +1,4 @@
-package chapter03.travel;
+package chapter03;
 
 /**
  * 二叉树的所有路径

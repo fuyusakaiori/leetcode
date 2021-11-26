@@ -2,14 +2,15 @@ package chapter03;
 
 import utils.TreeNode;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * <p>深度遍历构建二叉树</p>
  * <p>1. 中序遍历 + 前序遍历 构建二叉树</p>
  * <p>2. 中序遍历 + 后序遍历 构建二叉树</p>
+ * <p>3. 构建最大二叉树: 根结点始终大于右子树和左子树</p>
+ * <p>总结: 只要遇见使用数组构建二叉树的, 必然采用递归去构建, 几乎不需要考虑非递归, 而且返回值都是树的结点</p>
+ * <p>并且递归的函数需要的参数也是固定的, 就是左边界和右边界, 以及数组</p>
  */
 public class DFSBuildBinaryTree
 {
@@ -49,7 +50,7 @@ public class DFSBuildBinaryTree
     private static Map<Integer, Integer> map = new HashMap<>();
 
     /**
-     * <p>中序遍历 + 前序遍历构建二叉树</p>
+     * <p>中序遍历 + 前序遍历: 递归构建</p>
      * @param left 整个中序数组的左边界
      * @param right 整个中序数组的右边界
      * @param rootIndex 前序数组中根结点的索引
@@ -73,6 +74,9 @@ public class DFSBuildBinaryTree
         return root;
     }
 
+    /**
+     * 中序遍历 + 前序遍历: 非递归形式构建
+     */
     private static TreeNode buildBinaryTreeUnRecursive(int[] infixorder, int[] preorder){
         int index = 0;
         LinkedList<TreeNode> stack = new LinkedList<>();
@@ -104,5 +108,82 @@ public class DFSBuildBinaryTree
         }
 
         return null;
+    }
+
+
+    /**
+     * <p>核心思路</p>
+     * <p>1. 每次都选择数组中的最大值作为根结点, 然后将其左右两次划分为左右子树</p>
+     * <p>2. 左右子树分别继续找最大值, 构建二叉树, 构建完成后, 返回自己</p>
+     * @param nums 无序的数组
+     * @return 树的根结点
+     */
+    private static TreeNode buildMaximumBinaryTree(int[] nums){
+        return recursive(nums, 0, nums.length - 1);
+    }
+
+    /**
+     * 递归实现的时间复杂为 O(N^2)
+     */
+    private static TreeNode recursive(int[] nums, int left, int right){
+        // 常见终止条件
+        if (left > right)
+            return null;
+        int max = 0;
+        int mid = 0;
+        // 递归实现的最大二叉树构建是没有办法优化这个求最大值的过程的
+        for (int i = left;i <= right;i++){
+            if (max < nums[i]){
+                mid = i;
+                max = nums[i];
+            }
+        }
+        // 创建根结点
+        TreeNode root = new TreeNode(nums[mid]);
+        // 连接左右子树
+        root.left = recursive(nums, left, mid - 1);
+        root.right = recursive(nums, mid + 1, right);
+
+        return root;
+    }
+
+    /**
+     * <p>评论区中有人提到非递归的写法, 保证空间复杂度的情况下, 可以让时间复杂度降低到 O(N)</p>
+     * <p>1. 递归就是找到左右区间相等的位置停止, 那么此时这个元素一定就是树最底部的元素</p>
+     * <p>2. 也就说递归是需要找到最小值才停止的, 这个非递归的方式应该就是用栈模拟这个思路完成的</p>
+     * <p>3. 遍历数组的同时, 不停和前一个元素作判断</p>
+     * <p>3.1 如果发现前一个元素大于字节, 那么只能够证明自己比较小, 但是不一定就是最小的那个, 所以需要进入栈中暂时保存</p>
+     * <p>3.2 如果发现前一个元素小于字节, 那么就可以证明前一个元素恰好就是树的某一个边界值</p>
+     * <p>4. 找到边界值之后, 显然就需要自底向上开始构建树了, 就开始不停地出栈</p>
+     */
+    private static TreeNode unrecursive(int[] nums){
+        TreeNode node = null;
+        LinkedList<TreeNode> stack = new LinkedList<>();
+        // 数组最常见的操作自然就是遍历
+        for (int i = 0; i < nums.length; i++) {
+            node = new TreeNode(nums[i]);
+            // 如果后一个元素比前一个元素大, 那么它一定是前一个元素的根结点
+            while (!stack.isEmpty() && stack.peek().value < node.value){
+                // 然后暂时先保存这个栈顶结点, 不能够直接将当前结点接上栈顶元素
+                TreeNode temp = stack.pop();
+                // 看下一个结点是否还小于当前结点
+                // 如果新的栈顶元素还小于当前的结点并且在栈中, 就证明之前这个新的栈顶元素是大于出栈的元素, 并且小于当前的结点
+                // 那么就应该连接之前出栈的元素
+                if (!stack.isEmpty() && stack.peek().value < node.value)
+                    stack.peek().right = temp;
+                else
+                    node.left = temp;
+            }
+            // 如果后一个元素比前一个元素小, 那么它只能是前一个元素的子结点, 那么暂时就无法连接子结点, 直接入栈
+            stack.push(node);
+        }
+
+        // 最后里面会剩一些元素, 这些元素从栈顶到栈底是从小到大的顺序
+        while (!stack.isEmpty()){
+            node = stack.pop();
+            if (!stack.isEmpty())
+                stack.peek().right = node;
+        }
+        return node;
     }
 }

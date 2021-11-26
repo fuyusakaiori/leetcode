@@ -9,7 +9,7 @@ import java.util.*;
  * <p>1. 求二叉树的最大宽度, 不包含空节点</p>
  * <p>1. 求二叉树的最大宽度, 包含空节点</p>
  */
-public class MaxWidth
+public class BinaryTreeMaxWidth
 {
     public static void main(String[] args)
     {

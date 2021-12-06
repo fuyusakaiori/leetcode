@@ -1,5 +1,6 @@
 package chapter02;
 
+
 import utils.ListNode;
 import utils.RandomUtil;
 import utils.TestUtil;
@@ -8,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-// 链表分区
+/**
+ * <h2>链表分区</h2>
+ *
+ */
 public class ListPartition
 {
     public static void main(String[] args)

@@ -1,6 +1,6 @@
 package chapter03;
 
-import sun.text.normalizer.Trie;
+
 import utils.TreeNode;
 
 /**

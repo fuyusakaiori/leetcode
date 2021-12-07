@@ -11,23 +11,25 @@ import java.util.Random;
 
 /**
  * <h2>链表分区</h2>
- *
+ * <p>1. 给定一个值, 然后将链表分为大于这个值的结点在右边, 小于等于的在左边, 也就是分成两个区域</p>
+ * <p>2. 给定一个值, 然后将链表分为大于、等于、小于三个区域</p>
+ * <p>3. 给定一个值, 然后将链表分为 k 部分</p>
  */
 public class ListPartition
 {
+    /**
+     * <p>1. 前两个问题最容易想到的办法就是快速排序, 但是这里题目要求必须保证相对次序, 快排显然是不行的</p>
+     * <p>2. 第三个问题很简单, 只需要先记录长度, 然后遍历就可以</p>
+     */
     public static void main(String[] args)
     {
-        RandomUtil random = new RandomUtil(10, 100);
-        ListNode head = random.randomList();
-        TestUtil.printlnList(head);
-        int target = new Random().nextInt(100);
-        System.out.println(target);
-        ListNode partition = partition(head, target);
-        TestUtil.printlnList(partition);
+
     }
 
-    // 链表分区: 解法一（不可以保证相对次序）
-    private static ListNode listPartition(ListNode head, int target){
+    /**
+     * 采用快速排序来给链表分组
+     */
+    private static ListNode partitionList(ListNode head, int target){
         // 1. 辅助数组
         List<ListNode> help = new ArrayList<>();
         // 2. 遍历链表, 将所有元素放在数组中
@@ -44,7 +46,6 @@ public class ListPartition
         return partition(nodes, target);
     }
 
-    // TODO 快速排序的方式是没有办法确保相对次序的
     private static ListNode partition(ListNode[] nodes, int target){
         int index = 0;
         int leftIndex = 0;
@@ -83,58 +84,79 @@ public class ListPartition
         nodes[second] = temp;
     }
 
-    // 链表分区: 解法二（可以保证相对次序）
+    /**
+     * <p>使用临时变量来给链表分组</p>
+     */
     private static ListNode partition(ListNode head, int target) {
         if (head == null || head.next == null)
             return head;
         // 1. 准备六个变量: 左分区的头尾指针, 中间分区的头尾指针, 右分区的头尾指针
         ListNode current = head;
-        ListNode next = null;
-        ListNode sHead = null, sTail = null;
-        ListNode eHead = null, eTail = null;
-        ListNode bHead = null, bTail = null;
+        ListNode next = head.next;
+        ListNode sDummy = new ListNode(0), sCurrent = sDummy;
+        ListNode eDummy = new ListNode(0), eCurrent = eDummy;
+        ListNode bDummy = new ListNode(0), bCurrent = bDummy;
         // 2. 开始遍历链表
         while (current != null){
-            next = current.next;
             current.next = null;
             if (current.value < target){
-                if (sHead == null){
-                    sHead = current;
-                    sTail = sHead;
-                }else{
-                    sTail.next = current;
-                    sTail = current;
-                }
+                sCurrent.next = current;
+                sCurrent = sCurrent.next;
             }else if (current.value > target){
-                if (bHead == null){
-                    bHead = current;
-                    bTail = bHead;
-                }else{
-                    bTail.next = current;
-                    bTail = current;
-                }
+                eCurrent.next = current;
+                eCurrent = eCurrent.next;
             }else {
-                if (eHead == null){
-                    eHead = current;
-                    eTail = eHead;
-                }else{
-                    eTail.next = current;
-                    eTail = current;
-                }
+                bCurrent.next = current;
+                bCurrent = bCurrent.next;
             }
             current = next;
+            next = next != null ? next.next: null;
         }
 
-        // 3. 开始串联链表
-        // TODO 现列出所有的情况后再进一步优化
-        if (sHead == null && eHead == null){
-            return bHead;
-        }else if (sHead == null){
-            eTail.next = bHead;
-            return eHead;
-        }else{
-            sTail.next = eHead == null ? bHead : eHead;
-            return sHead;
+        // 只要使用哑元, 就可以完全避免空指针异常
+        sCurrent.next = eDummy.next;
+        eCurrent.next = bDummy.next;
+        return sDummy.next;
+    }
+
+    /**
+     *
+     * @param head 需要分割的链表
+     * @param k 分割的部分
+     */
+    private static ListNode[] splitList(ListNode head, int k){
+        if(head == null)
+            return new ListNode[k];
+        int length = 0;
+        ListNode current = head;
+        // 1. 计算长度
+        while (current != null && ++length > 0)current = current.next;
+        // 2. 开始遍历分割
+        int index = 0;
+        // 2.1 每个部分多少个结点
+        int numbers = length % k == 0 ? length / k : length / k + 1;
+        int counts = numbers;
+        current = head;
+        ListNode next = head.next;
+        ListNode [] parts = new ListNode[k];
+        while (current != null){
+            if (numbers == 1){
+                parts[index++] = head;
+                head = current.next;
+                current.next = null;
+                length -= counts;
+                if(k != 1){
+                    numbers = length % (--k) == 0 ? length / k : length / k + 1;
+                    counts = numbers;
+                }
+            }else{
+                numbers--;
+            }
+            current = next;
+            next = next != null ? next.next: null;
         }
+        if(head != null)
+            parts[index] = head;
+        return parts;
     }
 }

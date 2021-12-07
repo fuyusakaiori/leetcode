@@ -12,8 +12,6 @@ public class SwapPairsListElement
 {
     public static void main(String[] args)
     {
-        new CopyOnWriteArrayList<>();
-        String substring = new StringBuilder().substring(0);
 
     }
 

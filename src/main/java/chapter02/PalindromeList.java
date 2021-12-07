@@ -4,7 +4,9 @@ import utils.ListNode;
 
 import java.util.LinkedList;
 
-// 判断回文链表
+/**
+ * <h2>判断回文链表</h2>
+ */
 public class PalindromeList
 {
     public static void main(String[] args)
@@ -23,7 +25,7 @@ public class PalindromeList
         isPalindrome3(head);
     }
 
-    /* 解法一:
+    /** 解法一:
     1. 直接遍历链表将所有的元素全部压入栈中
     2. 再次遍历链表的同时将栈中元素出栈, 进行比对
      */

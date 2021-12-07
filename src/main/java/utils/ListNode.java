@@ -4,8 +4,10 @@ package utils;
 public class ListNode
 {
     public int value;
+    public ListNode previous;
     public ListNode next;
     public ListNode random;
+    public ListNode child;
 
     public ListNode()
     {

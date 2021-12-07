@@ -17,6 +17,7 @@ public class BinaryTreePathSum
 {
     public static void main(String[] args)
     {
+        Class<BinaryTreePathSum> binaryTreePathSumClass = BinaryTreePathSum.class;
 
     }
 

@@ -57,6 +57,7 @@ public class MergeLists
         current = list2;
         while (current.next != null)
             current = current.next;
+
         if (leftNode != null)
             leftNode.next = list2;
         current.next = rightNode;

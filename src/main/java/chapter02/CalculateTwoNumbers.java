@@ -1,4 +1,6 @@
-package chapter01;
+package chapter02;
+
+import utils.ListNode;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -25,7 +27,7 @@ public class CalculateTwoNumbers
         int result = 0;
         int carry = 0;
         while (list1 != null && list2 != null){
-            result = list1.val + list2.val + carry;
+            result = list1.value + list2.value + carry;
             carry = result / 10;
             node = new ListNode(result % 10);
             current.next = node;
@@ -34,7 +36,7 @@ public class CalculateTwoNumbers
             list2 = list2.next;
         }
         while (list1 != null){
-            result = list1.val + carry;
+            result = list1.value + carry;
             carry = result / 10;
             node = new ListNode(result % 10);
             current.next = node;
@@ -43,7 +45,7 @@ public class CalculateTwoNumbers
         }
 
         while (list2 != null){
-            result = list2.val + carry;
+            result = list2.value + carry;
             carry = result / 10;
             node = new ListNode(result % 10);
             current.next = node;
@@ -68,7 +70,7 @@ public class CalculateTwoNumbers
         int result = 0;
         int carry = 0;
         while (first != null && second != null){
-            result = first.val + second.val + carry;
+            result = first.value + second.value + carry;
             carry = result / 10;
             node = new ListNode(result % 10);
             node.next = dummy;
@@ -77,7 +79,7 @@ public class CalculateTwoNumbers
             second = second.next;
         }
         while (first != null){
-            result = first.val + carry;
+            result = first.value + carry;
             carry = result / 10;
             node = new ListNode(result % 10);
             node.next = dummy;
@@ -85,7 +87,7 @@ public class CalculateTwoNumbers
             first = first.next;
         }
         while (second != null){
-            result = second.val + carry;
+            result = second.value + carry;
             carry = result / 10;
             node = new ListNode(result % 10);
             node.next = dummy;
@@ -122,11 +124,11 @@ public class CalculateTwoNumbers
         LinkedList<Integer> secondStack = new LinkedList<>();
         // 压栈
         while (list1 != null){
-            firstStack.push(list1.val);
+            firstStack.push(list1.value);
             list1 = list1.next;
         }
         while (list2 != null){
-            secondStack.push(list2.val);
+            secondStack.push(list2.value);
             list2 = list2.next;
         }
         // 模拟计算

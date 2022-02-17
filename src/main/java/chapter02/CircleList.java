@@ -35,7 +35,7 @@ public class CircleList
      * <h3>采用快慢指针完成</h3>
      * TODO 记得看下这道题的证明过程
      */
-    private static ListNode detectCycle(ListNode head){
+    public static ListNode detectCycle(ListNode head){
         if (head == null || head.next == null) return null;
 
         ListNode slow = head;

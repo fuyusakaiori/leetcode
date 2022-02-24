@@ -8,10 +8,6 @@ import utils.ListNode;
  */
 public class ReOrderList
 {
-    /**
-     * <p>1. 这道题的核心思路其实已经用到了链表好几个常用的技巧</p>
-     * <p>2. 先使用快慢指针找到中点, 然后对后半部分逆序, 然后开始修改引用</p>
-     */
     public static void main(String[] args)
     {
 
@@ -19,39 +15,36 @@ public class ReOrderList
 
 
     /**
-     * <p>排序链表</p>
-     * @param head 链表
-     * @return 重排之后的链表
+     * <h3>思路: 找中点 + 逆序 + 衔接</h3>
+     * <h3>注: 几乎考察了链表常用的几个技巧</h3>
      */
-    private static ListNode reorder(ListNode head){
-        ListNode slow = head;
+    private static ListNode reorderList(ListNode head){
         ListNode fast = head;
-        // 1. 确定中点
-        while (fast != null && fast.next != null){
-            fast = fast.next.next;
+        ListNode slow = head;
+        // 找中点
+        while(fast != null && fast.next != null){
             slow = slow.next;
+            fast = fast.next.next;
         }
-        // 2. 逆序后半部分
+        // 开始逆序
         ListNode previous = null;
         ListNode current = slow;
-        ListNode next = slow.next;
-        while (current != null){
+        ListNode next = null;
+        while(current != null){
+            next = current.next;
             current.next = previous;
             previous = current;
             current = next;
-            next = next != null ? next.next: null;
         }
-
-        // 3. 开始修改引用
-        ListNode first = head;
-        ListNode second = previous;
-        next = second.next;
-        while (next != null){
-            second.next = first.next;
-            first.next = second;
-            second = second.next;
-            first = first.next.next;
-            next = next.next;
+        // 开始衔接
+        slow = previous;
+        fast = head;
+        while(slow.next != null){
+            next = slow.next;
+            slow.next = fast.next;
+            fast.next = slow;
+            slow = next;
+            fast = fast.next.next;
         }
         return head;
     }

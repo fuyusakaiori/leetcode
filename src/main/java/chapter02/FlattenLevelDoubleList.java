@@ -12,80 +12,47 @@ public class FlattenLevelDoubleList
 
     }
 
-
+    /**
+     * <h3>注意事项: </h3>
+     * <h3>递归返回的是尾结点, 但是方法最后应该返回头结点, 所以需要另起方法, 但不需要这个方法的返回值</h3>
+     */
     private static ListNode flatten(ListNode head){
-        recursiveOptimize(head);
+        if (head != null)
+            dfs(head);
         return head;
     }
 
     /**
-     * <p>采用递归实现的扁平化多级链表</p>
+     * <h3>思路: </h3>
      * <p>1. 如果发现某个结点存在子结点, 那么就直接去遍历子结点的链表</p>
-     * <p>2. 遍历到结尾的时候, 就将进入子链表的结点指向尾结点就行</p>
-     * <p>3. 我之前写的那个就是最优解, 但是为什么和那个嵌套循环的效率一样</p>
-     * <p>4. 原因是因为, 我把子链表接上来之后, 是接着遍历子链表的, 实际上应该把下一个结点先保存就可以避免遍历子链表</p>
+     * <p>2. 遍历到子链表的结尾时, 就直接返回尾结点: 注意这里一定是返回尾结点, 不要返回成空节点/p>
+     * <p>3. 将子链表的尾结点连接当前的结点的下个结点, 然后将当前结点的下个结点改为自己的子结点</p>
+     * <p>4. 当前结点下次直接移动到尾结点之后, 不要移动到下一个结点, 不然就会又遍历一次子链表</p>
      */
-    private static ListNode recursiveOptimize(ListNode head){
-        // 0. 每次返回的都是前一个结点, 因为当前结点是遍历到空值结束
-        ListNode previous = null;
+    private static ListNode dfs(ListNode head){
+        // 注: 此前使用四个变量, 实际只需要两个变量, 当前结点和尾结点
         ListNode current = head;
-        // 1. 开始遍历
-        while(current != null){
+        ListNode tail = null;
+        // 注: 这里没有采用 current.next != null 作为终止条件, 因为会导致只有一个元素的链表无法判断子结点
+        while (current != null){
+            // 如果没有子结点就直接向后遍历, 尾结点记录上一个结点
             if (current.child == null){
-                previous = current;
+                tail = current;
                 current = current.next;
             }else{
-                // 1.1 提前记录下一个结点, 避免父链表和子链表链接之后再去遍历
-                ListNode next = current.next;
-                ListNode tail = recursiveOptimize(current.child);
-                tail.next = next;
-                if (next != null)
-                    next.previous = tail;
+                tail = dfs(current.child);
+                // 尾结点连接下一个结点
+                tail.next = current.next;
+                if (current.next != null)
+                    current.next.previous = tail;
+                // 当前结点连接子结点
                 current.next = current.child;
                 current.child.previous = current;
-                // 1.2 更新前驱结点和当前结点, 因为子链表和父链表链接了, 所以前驱应该是尾结点
-                previous = tail;
-                current = next;
-            }
-
-
-        }
-
-        return previous;
-    }
-
-    /**
-     * <p>每次返回的都是头结点</p>
-     */
-    private static ListNode recursive(ListNode head){
-
-        ListNode current = head;
-        while (current != null){
-            if (current.child == null){
-                current = current.next;
-            }else{
-                // 0. 记录下一个结点
-                ListNode next = current.next;
-                // 1. 将孩子结点扁平化, 然后和父结点进行连接, 子链表的尾结点暂时不连接
-                ListNode child = recursive(current.child);
-                current.next = child;
-                child.previous = current;
-                // 2. 记得将孩子结点置为空
-                current.child = null;
-                // 3. 开始遍历子链表直到结尾, 因为尾结点没有连接父链表的结点, 所以会遍历到空
-                while (current.next != null)current = current.next;
-                // 4. 将子链表的尾结点和父链表的下一个结点相连
-                current.next = next;
-                if (next != null)
-                    next.previous = current.next;
-                // 5. 结点继续向后移动
-                current = next;
+                // 当前结点移动到尾结点
+                current = tail;
             }
         }
-        // 6.1 原来的做法是每次都返回子链表的尾结点, 因为需要将尾结点和父结点的下一个结点连起来
-        // 6.2 但是问题在于我们最后是要返回父链表的头结点的, 这个递归规则就出现不同, 此前就是采用利用层数判断是否返回头结点的
-        // 6.3
-        return head;
+        return tail;
     }
 
 

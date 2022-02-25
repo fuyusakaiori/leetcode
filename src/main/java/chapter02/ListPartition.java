@@ -3,6 +3,7 @@ package chapter02;
 
 import utils.ListNode;
 import utils.RandomUtil;
+import utils.Test;
 import utils.TestUtil;
 
 import java.util.ArrayList;
@@ -11,9 +12,8 @@ import java.util.Random;
 
 /**
  * <h2>链表分区</h2>
- * <p>1. 给定一个值, 然后将链表分为大于这个值的结点在右边, 小于等于的在左边, 也就是分成两个区域</p>
- * <p>2. 给定一个值, 然后将链表分为大于、等于、小于三个区域</p>
- * <p>3. 给定一个值, 然后将链表分为 k 部分</p>
+ * <h3>1. 分隔链表: 分隔成两个部分; 或者分隔成三个部分</h3>
+ * <h3>2. 分隔链表: 分隔成指定数量部分</h3>
  */
 public class ListPartition
 {
@@ -23,7 +23,14 @@ public class ListPartition
      */
     public static void main(String[] args)
     {
-
+        ListNode head = new ListNode(0);
+        ListNode current = head;
+        for (int index = 1;index <= 10;index++){
+            current.next = new ListNode(new Random().nextInt(11));
+            current = current.next;
+        }
+        TestUtil.printlnList(head);
+        TestUtil.printlnList(partition(head, 5));
     }
 
     /**
@@ -85,44 +92,39 @@ public class ListPartition
     }
 
     /**
-     * <p>使用临时变量来给链表分组</p>
+     * <h3>思路: 每个区域都用头尾指针记录, 然后将每个区域串联起来</h3>
      */
     private static ListNode partition(ListNode head, int target) {
         if (head == null || head.next == null)
             return head;
         // 1. 准备六个变量: 左分区的头尾指针, 中间分区的头尾指针, 右分区的头尾指针
         ListNode current = head;
-        ListNode next = head.next;
         ListNode sDummy = new ListNode(0), sCurrent = sDummy;
         ListNode eDummy = new ListNode(0), eCurrent = eDummy;
         ListNode bDummy = new ListNode(0), bCurrent = bDummy;
         // 2. 开始遍历链表
         while (current != null){
-            current.next = null;
             if (current.value < target){
                 sCurrent.next = current;
                 sCurrent = sCurrent.next;
             }else if (current.value > target){
-                eCurrent.next = current;
-                eCurrent = eCurrent.next;
-            }else {
                 bCurrent.next = current;
                 bCurrent = bCurrent.next;
+            }else {
+                eCurrent.next = current;
+                eCurrent = eCurrent.next;
             }
-            current = next;
-            next = next != null ? next.next: null;
+            current = current.next;
         }
-
         // 只要使用哑元, 就可以完全避免空指针异常
+        bCurrent.next = null;
         sCurrent.next = eDummy.next;
         eCurrent.next = bDummy.next;
         return sDummy.next;
     }
 
     /**
-     *
-     * @param head 需要分割的链表
-     * @param k 分割的部分
+     * <h3></h3>
      */
     private static ListNode[] splitList(ListNode head, int k){
         if(head == null)

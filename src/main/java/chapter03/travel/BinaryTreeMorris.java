@@ -3,9 +3,7 @@ package chapter03.travel;
 import utils.TreeNode;
 
 /**
- * <h2>Morris 算法遍历树结构</h2>
- * <p>时间复杂度: O(N)</p>
- * <p>空间复杂度: O(1)</p>
+ * <h2>Morris 算法</h2>
  */
 public class BinaryTreeMorris
 {
@@ -15,43 +13,39 @@ public class BinaryTreeMorris
     }
 
     /**
-     * 产生 Morris 序的算法
+     * <h3>产生 Morris 序的算法</h3>
      * @param root 根结点
      */
     private static void morris(TreeNode root){
-        // 遍历树的临时变量
         TreeNode current = root;
-        // 记录左子树的最右结点
         TreeNode mostRight = null;
+
         while (current != null){
-            // 1. 如果结点的左子树不为空, 那么向左侧移动
+            // 如果有左子树就可以到达两次
             if (current.left != null){
                 mostRight = current.left;
-                // 3. 开始循环遍历, 找到左子树的最右结点
                 while (mostRight.right != null && mostRight.right != current)
                     mostRight = mostRight.right;
-                // 4. 判断最右结点的右指针是否指向空
+                // 第一次到达
                 if (mostRight.right == null){
-                    // 4.1 将最右结点的右指针指向当前结点
                     mostRight.right = current;
-                    // 4.2 然后继续向左移动
                     current = current.left;
                     continue;
                 }else{
-                    // 5. 最右结点的右指针不指向空的话, 就将指针指向空
+                    // 第二次达到
                     mostRight.right = null;
                 }
             }
-            // 2. 如果结点的左子树为空, 那么向右侧移动
+            // 如果没有左子树就只能够到达一次
             current = current.right;
         }
     }
 
     /**
-     * 借助 Morris 算法产生前序
+     * <h3> Morris 序产生前序遍历</h3>
      * @param root 根结点
      */
-    private static void premorris(TreeNode root){
+    private static void preorderMorris(TreeNode root){
         TreeNode current = root;
         TreeNode mostRight = null;
 
@@ -61,28 +55,27 @@ public class BinaryTreeMorris
                 while (mostRight.right != null && mostRight.right != current)
                     mostRight = mostRight.right;
                 if (mostRight.right == null){
-                    // 第一次到达可以到达两次的结点时, 立刻输出
-                    System.out.print(current.value + "->");
+                    // 第一次到达就直接输出
+                    System.out.println(current.value);
                     mostRight.right = current;
                     current = current.left;
                     continue;
                 }else{
-                    // 第二次就不需要继续输出
                     mostRight.right = null;
                 }
             }else{
-                // 只能够到达一次的结点就立刻输出
-                System.out.print(current.value + "->");
+                // 第一次达到输出
+                System.out.println(current.value);
             }
             current = current.right;
         }
     }
 
     /**
-     * 借助 Morris 算法产生中序
+     * <h3> Morris 序产生中序遍历</h3>
      * @param root 根结点
      */
-    private static void infixmorris(TreeNode root){
+    private static void infixorderMorris(TreeNode root){
         TreeNode current = root;
         TreeNode mostRight = null;
 
@@ -92,26 +85,25 @@ public class BinaryTreeMorris
                 while (mostRight.right != null && mostRight.right != current)
                     mostRight = mostRight.right;
                 if (mostRight.right == null){
-                    // 第一次到达可以到达两次的结点时, 不做任何输出
+                    // 第一次到达不做任何输出
                     mostRight.right = current;
                     current = current.left;
                     continue;
                 }else{
-                    // 第二次到达的时候, 立刻输出
                     mostRight.right = null;
-                    System.out.print(current.value + "->");
+                    System.out.println(current.value);
                 }
             }else{
-                // 只能够到达一次的结点就立刻输出
-                System.out.print(current.value + "->");
+                // 仅达到一次的立刻输出
+                System.out.println(current.value);
             }
             current = current.right;
         }
     }
 
     /**
-     * <p>借助 Morris 算法产生后序</p>
-     * <p>注: Morris 产生后序是比较麻烦的</p>
+     * <h3> Morris 序产生后序遍历</p>
+     * <h3>注: Morris 产生后序是比较麻烦的</h3>
      * @param root 根结点
      */
     private static void postmorrsi(TreeNode root){
@@ -139,24 +131,47 @@ public class BinaryTreeMorris
         printTree(root);
     }
 
+    private static void postorderMorris(TreeNode root){
+        TreeNode current = root;
+        TreeNode mostRight = null;
+
+        while (current != null){
+            if (current.left != null){
+                mostRight = current.left;
+                while (mostRight.right != null && mostRight.right != current)
+                    mostRight = mostRight.right;
+                if (mostRight.right == null){
+                    mostRight.right = current;
+                    current = current.left;
+                    continue;
+                }else{
+                    mostRight.right = null;
+                    printTree(current.left);
+                }
+            }
+            current = current.right;
+        }
+        printTree(root);
+    }
+
     /**
-     * Morris 序生成后序时, 需要在第二次到达结点时, 反序输出, 其余时候不做任何处理
+     * <h3> 反序输出左子树 </h3>
      */
     private static TreeNode reverseTree(TreeNode root){
         TreeNode previous = null;
         TreeNode current = root;
-        TreeNode next = root.right;
+        TreeNode next = null;
         while (current != null){
+            next = current.right;
             current.right = previous;
             previous = current;
             current = next;
-            next = next != null ? next.right:null;
         }
         return previous;
     }
 
     /**
-     * 逆序输出
+     * <h3>逆序输出</h3>
      */
     private static void printTree(TreeNode root){
         TreeNode tail = reverseTree(root);

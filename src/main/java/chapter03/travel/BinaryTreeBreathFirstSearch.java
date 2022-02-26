@@ -2,16 +2,13 @@ package chapter03.travel;
 
 import utils.TreeNode;
 
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Queue;
+import java.util.*;
 
 /**
- * <p>宽度优先遍历及其衍生问题</p>
- * <p>1. 最基本的宽度遍历</p>
- * <p>2. 自底向上的宽度遍历</p>
- * <p>3. 锯齿形遍历</p>
+ * <h2>二叉树宽度遍历</h2>
+ * <h3>1. 二叉树层序遍历</h3>
+ * <h3>2. 二叉树层序遍历 II</h3>
+ * <h3>3. 锯齿形遍历</h3>
  */
 public class BinaryTreeBreathFirstSearch
 {
@@ -21,27 +18,75 @@ public class BinaryTreeBreathFirstSearch
     }
 
     /**
-     * 宽度遍历及其所有衍生问题都是基于这个最基本的方法
+     * <h3>思路: 队列</h3>
+     * <h3>注: 层序遍历所有衍生问题都是基于队列的思路</h3>
+     * <h3>注: 力扣上的题目带有返回值, 也就是我们需要区分每一层 => 记录当前层尾结点和下层尾结点即可</h3>
      */
-    private static void levelorder(TreeNode root){
-        if (root == null)
-            return;
+    private static List<List<Integer>> levelorderTop(TreeNode root){
+        TreeNode currentLevelEnd = root;
+        TreeNode nextLevelEnd = null;
         Queue<TreeNode> queue = new LinkedList<>();
-        queue.offer(root);
+        List<Integer> level = new LinkedList<>();
+        List<List<Integer>> levels = new LinkedList<>();
+
+        if (root != null) queue.offer(root);
         while (!queue.isEmpty()){
             root = queue.poll();
-            // TODO 所有处理出队的结点的行为都在这里添加
-            if (root.left != null)
+            level.add(root.value);
+            if (root.left != null){
                 queue.offer(root.left);
-            if (root.right != null)
+                nextLevelEnd = root.left;
+            }
+            if (root.right != null){
                 queue.offer(root.right);
+                nextLevelEnd = root.right;
+            }
+            if (currentLevelEnd == root){
+                levels.add(new LinkedList<>(level));
+                level.clear();
+                currentLevelEnd = nextLevelEnd;
+            }
         }
+        return levels;
     }
 
     /**
-     * <p>锯齿形遍历的意思就是, 先从左向右处理, 下一层从右向左处理</p>
-     * <p>两种方式: 1. 采用栈实现 2. 采用双端队列实现</p>
-     * <p>个人认为, 采用双端队列的逻辑稍微复杂点, 代码长点, 但是更加灵活</p>
+     * <h3>思路: 自底向上遍历</h3>
+     * <h3>1. 可以使用栈, 但是比较繁琐</h3>
+     * <h3>2. 每次指定在链表首位添加就可以</h3>
+     */
+    private static List<List<Integer>> levelorderDown(TreeNode root){
+        TreeNode currenLevelEnd = root;
+        TreeNode nextLevelEnd = null;
+        List<Integer> level = new LinkedList<>();
+        List<List<Integer>> levels = new LinkedList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        if(root != null)
+            queue.offer(root);
+        while(!queue.isEmpty()){
+            root = queue.poll();
+            level.add(root.value);
+            if(root.left != null){
+                queue.offer(root.left);
+                nextLevelEnd = root.left;
+            }
+            if(root.right != null){
+                queue.offer(root.right);
+                nextLevelEnd = root.right;
+            }
+            if(currenLevelEnd == root){
+                levels.add(0, new LinkedList<>(level));
+                level.clear();
+                currenLevelEnd = nextLevelEnd;
+            }
+        }
+        return levels;
+    }
+
+    /**
+     * <h3>思路: </h3>
+     * <h3>1. 栈实现</h3>
+     * <h3>2. 双端队列实现: 指的是每层双端队列实现, 不是将整体换成双端队列</h3>
      */
     private static void zigZagLevelOrderDeque(TreeNode root){
         if (root == null)return;
@@ -87,25 +132,26 @@ public class BinaryTreeBreathFirstSearch
     }
 
     /**
-     * 使用栈的话实际上是因为 LeetCode 题返回的是链表集合, 所以可以在不同的层调用不同方法
+     * <h3>思路: </h3>
+     * <h3>1. 奇数层是正序, 偶数层是反序 => 最直观的想法就是使用栈</h3>
+     * <h3>2. 奇数层的时候当链表使用, 偶数层的时候当栈使用, 也就是在结点进入链表的时候区分</h3>
+     * <h3>3. 这样就不用考虑下一层尾结点的更新问题</h3>
      */
     private static List<List<Integer>> zigXagLevelOrderStack(TreeNode root){
         boolean flag = true;
         TreeNode currentEnd = root;
         TreeNode nextEnd = root;
-        List<List<Integer>> level = new LinkedList<>();
-        LinkedList<Integer> nodes = new LinkedList<>();
+        List<List<Integer>> levels = new LinkedList<>();
+        LinkedList<Integer> level = new LinkedList<>();
         Queue<TreeNode> queue = new LinkedList<>();
         if(root != null)
             queue.offer(root);
         while(!queue.isEmpty()){
             root = queue.poll();
             // 当前层采用正常添加元素的方式
-            if(flag)
-                nodes.add(root.value);
+            if(flag) level.add(root.value);
             // 下一层采用栈添加元素的方式, 这样顺序自然而然就是逆序的
-            else
-                nodes.push(root.value);
+            else level.push(root.value);
             if(root.left != null){
                 queue.add(root.left);
                 nextEnd = root.left;
@@ -115,14 +161,14 @@ public class BinaryTreeBreathFirstSearch
                 nextEnd = root.right;
             }
             if(root == currentEnd){
-                level.add(nodes);
-                nodes = new LinkedList<>();
+                levels.add(level);
+                level = new LinkedList<>();
                 currentEnd = nextEnd;
                 flag = !flag;
             }
 
         }
-        return level;
+        return levels;
     }
 
 }

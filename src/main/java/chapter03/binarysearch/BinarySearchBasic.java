@@ -103,13 +103,93 @@ public class BinarySearchBasic {
      * <h3>2. 如果删除的是非叶子结点, 那么需要分为两种情况</h3>
      * <h3>2.1 非叶子结点具有一个叶子结点, 直接让父结点指向孙子结点</h3>
      * <h3>2.2 非叶子结点具有两个叶子结点, 找左子树的最右结点或者右子树的最左结点替换删除的结点</h3>
+     * <h3>注: 这个应该是没有迭代的写法...</h3>
+     * <h3>注: 这个是我自己的写法, 官方题解写得没这么直白...之后有空再看</h3>
      */
     private static TreeNode deleteBST(TreeNode root, int target){
-        return null;
+        // 注: 主要目的是为了删除头部, 这里为了简化使用 next 指针
+        TreeNode dummy = new TreeNode(root.value);
+        dummy.next = root;
+        dfs(root, dummy, target);
+        return dummy.next;
     }
 
+    private static void dfs(TreeNode root, TreeNode parent, int target){
+
+        if (root.value > target){
+            dfs(root.left, root, target);
+        }else if (root.value < target){
+            dfs(root.right, root, target);
+        }else{
+            if (root.left == null && root.right == null){
+                // 如果删除的叶子结点是父结点的左子结点, 那么父结点的左孩子置为空值即可, 右子结点同理
+                if (parent.left == root) parent.left = null;
+                if (parent.right == root) parent.right = null;
+            }else if (root.left != null && root.right != null){
+                TreeNode upper = root;
+                TreeNode node = root.right;
+                while (node.left != null) {
+                    upper = node;
+                    node = node.left;
+                }
+                if (parent.next == root){
+                    parent.next = node;
+                }else if (parent.left == root){
+                    parent.left = node;
+                }else if (parent.right == root){
+                    parent.right = node;
+                }
+                // 注: 无论当前结点的右子树是否为空, 当前结点的父结点都需要接手这个右子树
+                // 注: 不过如果要删除的结点的右子结点就是当前结点, 那么就不需要接手了
+                if (root.right != node) upper.left = node.right;
+                // 更改当前结点的引用, 以达到删除目标结点的目的
+                node.left = root.left;
+                // 如果要删除的结点的右子结点就是当前结点, 那么就不要连接了, 会出现环
+                if (root.right != node)
+                    node.right = root.right;
+            }else{
+                TreeNode node = root.left != null ? root.left: root.right;
+                if (parent.next == root)
+                    parent.next = node;
+                else if (parent.left == root)
+                    parent.left = node;
+                else if (parent.right == root)
+                    parent.right = node;
+            }
+        }
+    }
+
+    /**
+     * <h3>思路: 向二叉搜索树中的插入结点</h3>
+     * <h3>1. 先根据二叉搜索水的特性查找到相应的位置</h3>
+     * <h3>2. 然后将当前需要插入的值封装成结点, 然后返回即可</h3>
+     * <h3>注: 迭代和递归都可以实现</h3>
+     */
     private static TreeNode insertBST(TreeNode root, int value){
-        return null;
+        if (root == null)
+            return new TreeNode(value);
+        TreeNode current = root;
+        while(current.left != null || current.right != null){
+            if (current.left != null && current.value > value)
+                current = current.left;
+            else if (current.right != null && current.value < value)
+                current = current.right;
+            else
+                break;
+        }
+        if (current.value > value) current.left = new TreeNode(value);
+        if (current.value < value) current.right = new TreeNode(value);
+        return current;
+    }
+
+    private static TreeNode insertDFS(TreeNode root, int value){
+        if (root == null)
+            return new TreeNode(value);
+        if (root.value > value)
+            root.left = insertDFS(root.left, value);
+        if (root.value < value)
+            root.right = insertDFS(root.right, value);
+        return root;
     }
 
 }

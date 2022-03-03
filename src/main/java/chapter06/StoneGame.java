@@ -7,7 +7,7 @@ package chapter06;
  * <p>2. 两个玩家每次都只能从左侧或者右侧拿走一个数字</p>
  * <p>3. 两个玩家都是聪明绝顶的玩家, 请返回最后获胜者的分数</p>
  */
-public class CardGame
+public class StoneGame
 {
     public static void main(String[] args)
     {

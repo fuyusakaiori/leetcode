@@ -1,4 +1,4 @@
-package chapter03;
+package chapter03.binarytree;
 
 import utils.TreeNode;
 

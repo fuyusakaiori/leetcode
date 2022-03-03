@@ -16,8 +16,6 @@ import java.util.List;
  */
 public class BinarySearchMath {
 
-    public static void main(String[] args) {
-    }
 
     /**
      * <h3>思路: 二叉树的最小绝对值, 基于中序遍历实现</h3>

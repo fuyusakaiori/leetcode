@@ -2,10 +2,7 @@ package chapter03.binarytree;
 
 import utils.TreeNode;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.Map;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * <h2>二叉树深度与宽度/h2>
@@ -13,6 +10,7 @@ import java.util.Queue;
  * <h3>2. 二叉树的最小深度</h3>
  * <h3>3. 二叉树的最大宽度</h3>
  * <h3>4. 二叉树的最大宽度 II</h3>
+ * <h3>5. 二叉树层平均值</h3>
  */
 public class BinaryTreeDepthAndWidth
 {
@@ -141,6 +139,70 @@ public class BinaryTreeDepthAndWidth
         maxWidth = Math.max(maxWidth, index - map.get(depth) + 1);
         dfs(root.left, depth + 1, index * 2 + 1);
         dfs(root.right, depth + 1, index * 2 + 2);
+    }
+
+    /**
+     * <h3>思路: 二叉树的层平均值</h3>
+     * <h3>1. 深度遍历</h3>
+     * <h3>2。层序遍历</h3>
+     */
+    private static List<Double> averageOfLevelsDFS(TreeNode root){
+        List<Double> averages = new LinkedList<>();
+        List<Double> counts = new LinkedList<>();
+        List<Double> sums = new LinkedList<>();
+        dfs(root, 0, counts, sums);
+        for(int index = 0;index < counts.size();index++){
+            averages.add(sums.get(index) / counts.get(index));
+        }
+        return averages;
+    }
+
+    private static void dfs(TreeNode root, int level, List<Double> counts, List<Double> sum){
+        if(root == null) return;
+
+        if(level >= counts.size()){
+            counts.add(1.0);
+            sum.add(root.value * 1.0);
+        }else{
+            counts.set(level, counts.get(level) + 1);
+            sum.set(level, sum.get(level) + root.value);
+        }
+        dfs(root.left, level + 1, counts, sum);
+        dfs(root.right, level + 1, counts, sum);
+
+    }
+
+    private static List<Double> averageOfLevelsBFS(TreeNode root){
+        double number = 0;
+        double sum = 0;
+        TreeNode currentLevelEnd = root;
+        TreeNode nextLevelEnd = null;
+        List<Double> averages = new LinkedList<>();
+        Queue<TreeNode> queue = new LinkedList<>();
+        if(root != null)
+            queue.offer(root);
+
+        while(!queue.isEmpty()){
+            root = queue.poll();
+            sum += root.value;
+            number++;
+            if(root.left != null){
+                queue.offer(root.left);
+                nextLevelEnd = root.left;
+            }
+            if(root.right != null){
+                queue.offer(root.right);
+                nextLevelEnd = root.right;
+            }
+            if(currentLevelEnd == root){
+                currentLevelEnd = nextLevelEnd;
+                averages.add(sum / number);
+                sum = 0;
+                number = 0;
+            }
+        }
+
+        return averages;
     }
 
 

@@ -132,6 +132,7 @@ public class PathProblem {
 
     /**
      * <h3>4. 三角形最小路径和</h3>
+     * <h3>1. 要求输出路径? => 递归输出, 别用动态规划</h3>
      */
     private static int minimumTotal(List<List<Integer>> triangle){
         // 0. 直接开一个矩阵就行, 三角形不好表示, 空着的地方空着就行

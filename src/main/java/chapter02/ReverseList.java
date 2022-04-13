@@ -6,60 +6,62 @@ import utils.ListNode;
  * <h2>反转链表</h2>
  * <h3>1.反转链表</h3>
  * <h3>2.反转链表 II</h3>
- * <h3>3.K个一组反转</h3>
+ * <h3>3.两两交换链表中的结点</h3>
+ * <h3>4.K个一组反转</h3>
  * <p>万能解法: 集合、数组、栈都是可以完成的</p>
  */
-public class ReverseList
-{
-    public static void main(String[] args)
-    {
-
-    }
-
-
-    private static ListNode reverseAll(ListNode head){
-        if(head == null || head.next == null)
-            return head;
-        ListNode previous = null;
-        ListNode current = head;
-        ListNode next = head.next;
-        while(current != null){
-            current.next = previous;
-            previous = current;
-            current = next;
-            next = next != null ? next.next: null;
-        }
-        return previous;
-    }
+public class ReverseList {
 
     /**
-     * 反转指定范围内的部分链表
+     * <h3>思路: 反转链表</h3>
      */
-    public static ListNode reverseBetween(ListNode head, int left, int right) {
-        int index = 1;
-        ListNode dummy = new ListNode(0, head);
-        ListNode current = head;
-        ListNode previous = null;
-        ListNode next = null;
-        // 先到达需要反转的位置
-        while(index <= left){
-            dummy = index == left - 1 ? current: dummy;
-            previous = current;
-            current = current.next;
-            index++;
-        }
-        // 开始反转
-        while(index++ <= right){
+    private static ListNode reverse(ListNode head){
+        ListNode previous = null, current = head, next = null;
+        while (current != null){
             next = current.next;
             current.next = previous;
             previous = current;
             current = next;
         }
+        return previous;
+    }
+
+    /**
+     * <h3>思路: 反转链表 II</h3>
+     */
+    public static ListNode reverseBetween(ListNode head, int left, int right) {
+        int index = 1;
+        // 注: 这个变量的目的是为了记录左边界的前驱结点
+        ListNode dummy = new ListNode(0, head);
+        ListNode previous = null, current = head, next = null;
+        // 1. 找到左边界之后就可以开始反转链表了
+        while (index <= left){
+            // 2. 记录左边界的前驱结点, 这么处理的原因是可能恰好反转的部分是从头开始的
+            dummy = index == left - 1 ? current: dummy;
+            // 3. 反转链表的前驱结点会移动到左边界
+            previous = current;
+            current = current.next;
+            index++;
+        }
+        // 4. 从左边界开始反转链表
+        while (index <= right){
+            next = current.next;
+            current.next = previous;
+            previous = current;
+            current = next;
+            index++;
+        }
+        // 5. 通过左边界前驱结点修改左边界的后继结点
         dummy.next.next = current;
+        // 6. 修改前驱结点的后继结点
         dummy.next = previous;
+        // 7. 如果左边界前驱结点仍然是哑元, 那么证明反转就是从头结点开始的
         return dummy.value != 0 ? head: dummy.next;
     }
 
+    /**
+     * <h3>思路: K个一组反转链表</h3>
+     */
     public static ListNode reverseKGroup(ListNode head, int k) {
         ListNode dummy = new ListNode(0, head);
         ListNode tail = dummy;
@@ -89,7 +91,7 @@ public class ReverseList
         }
         return dummy.next;
     }
-    // 反转链表, 并且返回头尾指针
+
     public static ListNode[] reverse(ListNode head, ListNode tail){
         ListNode previous = null;
         ListNode current = head;

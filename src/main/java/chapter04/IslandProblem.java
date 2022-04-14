@@ -9,6 +9,7 @@ import java.util.Queue;
  * <h2>岛屿问题</h2>
  * <h3>1. 岛屿数量</h3>
  * <h3>2. 岛屿周长</h3>
+ * <h3>3. 岛屿最大面积</h3>
  * <h3>注: 这两个题应该都是采用 DFS BFS 并查集这三种解法完成</h3>
  */
 public class IslandProblem {

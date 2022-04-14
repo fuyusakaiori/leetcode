@@ -11,19 +11,21 @@ import java.util.Map;
  * <h3>3. 头结点作为最不常使用的结点, 尾结点作为最常使用的结点</h3>
  * <h3>4. 每次插入的新结点都是最常使用的, 每次移除结点都是最不常使用的</h3>
  */
-public class LRUCache<K, V>
-{
+public class LRUCache<K, V> {
+
     /**
-     * <h3>双向链表的结点</h3>
-     * @param <K>
-     * @param <V>
+     * <h3>双向链表结点</h3>
+     * <h3>注: 记录 {@code key} 的目的是为了之后移除 {@code cache} 中的 {@code key}</h3>
+     * @param <K> key
+     * @param <V> value
      */
     private static class Node<K, V>{
-        private K key;
+        private final K key;
         private V value;
-        private Node<K, V> previous;
         private Node<K, V> next;
-        public Node(V value) {
+        private Node<K, V> previous;
+        public Node(K key, V value) {
+            this.key = key;
             this.value = value;
         }
     }
@@ -33,100 +35,94 @@ public class LRUCache<K, V>
         private Node<K, V> tail;
 
         /**
-         * <h3>插入结点</h3>
+         * <h3>向双向链表中添加结点</h3>
          */
         private void add(Node<K, V> node){
-            if (node == null) return;;
-            if (head == null){
-                head = node;
+            if (node == null) return;
+            if (this.head == null){
+                this.head = node;
             }else{
-                tail.next = node;
+                this.tail.next = node;
                 node.previous = tail;
             }
-            // 更新尾结点
-            tail = node;
+            this.tail = node;
         }
 
         /**
-         * <h3>删除最不常使用的结点</h3>
-         * @return 删除的结点
+         * <h3>淘汰旧的结点</h3>
          */
         private Node<K, V> remove(){
-            if (head == null) return null;
-            Node<K, V> node = head;
+            if (this.head == null) return null;
+            Node<K, V> node = this.head;
+            // 1. 如果只有唯一的元素, 那么就直接头尾结点置为空
             if (head == tail){
-                head = null;
-                tail = null;
+                this.head = null;
+                this.tail = null;
             }else{
-                head = node.next;
+                // 2. 如果存在多个元素, 那么只需要把头结点更新就行
+                this.head = node.next;
+                this.head.previous = null;
                 node.next = null;
-                node.previous = null;
             }
             return node;
         }
 
         /**
-         * <h3>设置最常用结点</h3>
+         * <h3>更新结点</h3>
          */
         private void move(Node<K, V> node){
-            if (node == null || node == tail) return;
-            if (head == node){
-                head = node.next;
-                head.previous = null;
+            if (node == null || node == this.tail) return;
+            if (this.head == node){
+                this.head = this.head.next;
+                this.head.previous = null;
             }else{
                 node.previous.next = node.next;
                 node.next.previous = node.previous;
             }
-            // 更新尾结点
-            tail.next = node;
-            // 记得断开当前结点的
+            this.tail.next = node;
+            node.previous = this.tail;
             node.next = null;
-            node.previous = tail;
-            tail = node;
+            this.tail = node;
         }
     }
 
-    // 注: 这里准备两个哈希表的原因: 删除的时候是通过 Value 删除键值对的, 但是哈希表只能够通过 Key 去删除
-    // 解决方案一: 建立哈希表保存 Value-Key 的关系
-    // 解决方案二: 链表结点中保存 Key 值
+
     private final int capacity;
     private final Map<K, Node<K, V>> cache;
     private final DoubleLinkedList<K, V> linkedList;
 
-    public LRUCache(int capacity)
-    {
+    public LRUCache(int capacity) {
         this.capacity = capacity;
         this.cache = new HashMap<>();
         this.linkedList = new DoubleLinkedList<>();
     }
 
-    public V get(K key){
-        if (cache.containsKey(key)){
-            Node<K, V> node = cache.get(key);
+    public void put(K key, V value){
+        if (this.cache.containsKey(key)){
+            Node<K, V> node = this.cache.get(key);
+            node.value = value;
             linkedList.move(node);
+        }else{
+            Node<K, V> node = new Node<>(key, value);
+            this.cache.put(key, node);
+            this.linkedList.add(node);
+            if (this.cache.size() > this.capacity)
+                this.remove();
+        }
+    }
+
+    public V get(K key){
+        if (this.cache.containsKey(key)){
+            Node<K, V> node = this.cache.get(key);
+            this.linkedList.move(node);
             return node.value;
         }
         return null;
     }
 
-    public void set(K key, V value){
-        if (cache.containsKey(key)){
-            Node<K, V> node = cache.get(key);
-            node.value = value;
-            linkedList.move(node);
-        }else{
-            Node<K, V> node = new Node<>(value);
-            node.key = key;
-            cache.put(key, node);
-            linkedList.add(node);
-            if (cache.size() > capacity)
-                remove();
-        }
-    }
-
     public void remove(){
-        Node<K, V> node = linkedList.remove();
-        if (node != null)
-            cache.remove(node.key);
+        Node<K, V> remove = this.linkedList.remove();
+        if (remove != null)
+            this.cache.remove(remove.key);
     }
 }

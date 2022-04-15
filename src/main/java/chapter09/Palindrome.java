@@ -2,58 +2,76 @@ package chapter09;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * <h2>回文串相关问题</h2>
- * <h3>常用的三种解法: 中心扩展 => Manacher => 动态规划</h3>
- * <p>1. 验证回文串</p>
- * <p>2. 验证回文子串 II</p>
- * <p>3. 最长回文串</p>
- * <p>4. 回文子串</p>
- * <p>5. 分割回文串</p>
- * <p>6. 分割回文子串 II</p>
- * <p>7. 最长回文序列</p>
- * <p>注: 这里不提供动态规划的做法, 动态规划的解法放在 chapter 06 中</p>
+ * <h3>1. 验证回文串</h3>
+ * <h3>2. 验证回文子串 II</h3>
+ * <h3>3. 最长回文串</h3>
+ * <h3>4. 回文子串</h3>
+ * <h3>5. 分割回文串</h3>
+ * <h3>6. 分割回文子串 II</h3>
+ * <h3>7. 最长回文序列</h3>
+ * <h3>注: 这类题目解法基本一致: ① 中心扩展 ② {@code Manacher} 算法 ③ d动态规划</h3>
  */
-public class Palindrome
-{
-    public static void main(String[] args)
-    {
-    }
+public class Palindrome {
 
     /**
-     * <h3>3. 最长回文串</h3>
-     * <p>中心扩展算法</p>
-     * @param str 字符串
-     * @return 最长的回文子串
+     * <h3>思路: 最长回文串</h3>
+     * <h3>1. 中心扩展算法: 这个算法是一定要掌握的</h3>
+     * <h3>2. {@code Manacher} 算法: 这个是拿来装逼的</h3>
+     * <h3>3. 动态规划: 这个是最好要会的, 相对容易的优化解</h3>
      */
-    private static String longestPalindrome(String str, String expandAroundCenter){
-        int length = 0;
+    private static String longestPalindrome1(String str){
         int maxLength = 0;
         String result = null;
-        for (int center = 0;center <= 2 * str.length() - 1;center++){
-            int left = center / 2;
-            int right = left + center % 2;
-            StringBuilder sb = new StringBuilder();
-            while (left >= 0 && right <= str.length() - 1 && str.charAt(left) == str.charAt(right)){
-                if(left == right){
-                    sb.append(str.charAt(left));
-                    length++;
-                }else{
-                    sb.insert(0, str.charAt(left));
-                    sb.insert(sb.length(), str.charAt(right));
-                    length += 2;
-                }
+        char[] chars = str.toCharArray();
+        // 1. 这里最核心的地方在于存在两种情况: aba bba;前者很容易判断, 但是后者和前者判断就有些微差距
+        // 2. 所以这里就有两种处理方式: 填充间隙, 这样依然可以按照第一种方式处理; 第二种就是单独处理
+        for (int center = 0;center < chars.length * 2 - 1;center++){
+            // 3. 这里的目的就是为了兼顾两种情况, 我把另外一种写法写出来, 应该会比较好理解
+            int left = center / 2, right = left + center % 2;
+            while (left >= 0 && right <= chars.length - 1){
+                if (chars[left] != chars[right]) break;
                 left--;
                 right++;
             }
-            if(maxLength < length){
-                maxLength = length;
-                result = sb.toString();
+            String sub = str.substring(left + 1, right);
+            if (sub.length() > maxLength){
+                maxLength = Math.max(maxLength, sub.length());
+                result = sub;
             }
-            length = 0;
         }
         return result;
+    }
+
+    private static String longestPalindrome2(String str){
+        int start = 0, end = 0;
+        for (int center = 0;center < str.length();center++){
+            // 1. 中心点为当前点
+            int firstLength = expand(str, center, center);
+            // 2. 中心点在缝隙中
+            int secondLength = expand(str, center, center + 1);
+            // 3. 最大长度
+            int maxLength = Math.max(firstLength, secondLength);
+            if (maxLength > end - start + 1){
+                // 4. 这里长度减一再除二的目的是为了确保中心点在缝隙中的情况是正确的
+                start = center - (maxLength - 1) / 2;
+                end = center + maxLength / 2;
+            }
+        }
+        return str.substring(start, end + 1);
+    }
+
+    private static int expand(String str, int left, int right){
+        while (left >= 0 && right <= str.length() - 1){
+            if (str.charAt(left) != str.charAt(right))
+                break;
+            left--;
+            right++;
+        }
+        return right - left - 1;
     }
 
     /**

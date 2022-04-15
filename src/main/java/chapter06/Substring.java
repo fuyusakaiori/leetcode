@@ -9,7 +9,8 @@ import java.util.List;
  * <h3>2. 回文子串</h3>
  * <h3>3. 分割回文串</h3>
  * <h3>4. 分割回文子串 II</h3>
- * <h3>5. 最长回文序列</h3>
+ * <h3>5. 最大子数组和</h3>
+ * <h3>6. 乘积最大子数组</h3>
  * <h3>注: 这类题目解法基本一致: ① 中心扩展 ② {@code Manacher} 算法 ③ d动态规划</h3>
  */
 public class Substring {
@@ -311,4 +312,59 @@ public class Substring {
         }
     }
 
+
+    /**
+     * <h3>思路: 最大子数组和</h3>
+     */
+    private static int maxSubArray(int[] nums){
+        int maxSum = Integer.MIN_VALUE;
+        int[] dp = new int[nums.length + 1];
+        for (int index = nums.length - 1;index >= 0;index--){
+            dp[index] = Math.max(dp[index + 1] + nums[index], nums[index]);
+            maxSum = Math.max(maxSum, dp[index]);
+        }
+
+        return maxSum;
+    }
+
+    private static int maxSum = Integer.MIN_VALUE;
+
+    private static int dfs(int[] nums, int index){
+        if (index == nums.length) return 0;
+        int newSum = Math.max(dfs(nums, index + 1) + nums[index], nums[index]);
+        maxSum = Math.max(maxSum, newSum);
+        return newSum;
+    }
+
+    /**
+     * <h3>思路: 乘积最大子数组</h3>
+     * <h3>注: 最大值和最小值都要尝试然后判断</h3>
+     */
+    private static int maxProduct(int[] nums){
+        int maxProduct = Integer.MIN_VALUE;
+        int[][] dp = new int[nums.length + 1][2];
+        dp[nums.length][0] = dp[nums.length][1] = 1;
+        for (int index = nums.length - 1;index >= 0;index--){
+            dp[index][0] = Math.max(dp[index + 1][0] * nums[index],
+                    Math.max(dp[index + 1][1] * nums[index], nums[index]));
+            dp[index][1] = Math.min(dp[index + 1][0] * nums[index],
+                    Math.min(dp[index + 1][1] * nums[index], nums[index]));
+            maxProduct = Math.max(maxProduct, dp[index][0]);
+        }
+        return maxProduct;
+    }
+    private static int maxProduct = Integer.MIN_VALUE;
+
+    private static int[] dfs(int index, int[] nums){
+        if(index == nums.length) return new int[]{1, 1};
+
+        int[] values = dfs(index + 1, nums);
+        // 注: 因为可能存在负负得正这种情况, 所以只能够两个都尝试
+        int maxValue = Math.max(nums[index] * values[0],
+                Math.max(nums[index] * values[1], nums[index]));
+        int minValue = Math.max(nums[index] * values[0],
+                Math.min(nums[index] * values[1], nums[index]));
+        maxProduct = Math.max(maxProduct, maxValue);
+        return new int[]{maxValue, minValue};
+    }
 }

@@ -27,7 +27,6 @@ public class ThreeSum {
             if (first > 0 && nums[first] == nums[first - 1]) continue;
             // 3. 剩下两个值必须要和这个值相等, 才是三元组
             int target = -nums[first];
-
             // 4. 第三个指针只能够是在这里定义 => 不要在循环中定义, 这会导致每次双指针的时候都从尾部开始, 实际上是不需要的
             int third = nums.length - 1;
 

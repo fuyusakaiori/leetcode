@@ -10,13 +10,7 @@ import java.util.*;
  * <h3>2. 从后序和中序遍历构建二叉树</h3>
  * <h3>3. 构建最大二叉树</h3>
  */
-public class BinaryTreeBuild
-{
-    public static void main(String[] args)
-    {
-        PriorityQueue<TreeNode> queue = new PriorityQueue<>((node1, node2) -> node2.value - node1.value);
-
-    }
+public class BinaryTreeBuild {
 
     /**
      * <h3>核心思路: 以中序遍历 + 前序遍历为例, 中序遍历 + 后序遍历是完全相同的</h3>
@@ -32,15 +26,14 @@ public class BinaryTreeBuild
      * <h3>注: 前序和后序是没有办法生成唯一的二叉树的, 根结点是不确定的</h3>
      * <h3>注: 数组中的元素不能够重复, 否则根结点也不确定</h3>
      * @param infixorder 中序遍历生成的序列
-     * @param postorder 后序遍历生成的序列
      * @param preorder  前序遍历生成的序列
      * @return 树的根结点
      */
-    private static TreeNode buildTreeByInfixAndPrefix(int[] infixorder, int[] postorder, int[] preorder){
+    private static TreeNode buildTree(int[] infixorder, int[] preorder){
         for(int i = 0;i < infixorder.length;i++){
             map.put(infixorder[i], i);
         }
-        return infixPrefixDFS(0, preorder, 0, infixorder.length - 1, infixorder);
+        return dfs(0, preorder, 0, infixorder.length - 1, infixorder);
     }
 
     /**
@@ -52,15 +45,15 @@ public class BinaryTreeBuild
     /**
      * <h3>前序 + 中序构建</h3>
      */
-    private static TreeNode infixPrefixDFS(int index, int[] preorder, int left, int right, int[] infixorder){
+    private static TreeNode dfs(int index, int[] preorder, int left, int right, int[] infixorder){
         if(left > right) return null;
         TreeNode root = new TreeNode(preorder[index]);
         int mid = map.get(preorder[index]);
         // 3.1 左右子树的划分不要包括根结点
         // 3.2 右子树的根结点索引没有那么好确定, 不能够直接加一或者加二, 因为左右子树的根结点不一定是相邻的
         // 3.2 相隔的距离恰好是左子树的结点的个数, 所以右子树的根结点应该移动左子树结点数那么多的距离
-        root.left = infixPrefixDFS(index + 1, preorder, left, mid - 1, preorder);
-        root.right = infixPrefixDFS(index + mid - left + 1, preorder, mid + 1, right, preorder);
+        root.left = dfs(index + 1, preorder, left, mid - 1, preorder);
+        root.right = dfs(index + mid - left + 1, preorder, mid + 1, right, preorder);
         return root;
     }
 
@@ -69,7 +62,7 @@ public class BinaryTreeBuild
      * <h3>前序 + 中序思路: 栈</h3>
      * <h3>注: 这个做法属实是没啥印象了... </h3>
      */
-    private static TreeNode infixPrefixStack(int[] infixorder, int[] preorder){
+    private static TreeNode buildTreeStack(int[] preorder, int[] infixorder){
         int index = 0;
         LinkedList<TreeNode> stack = new LinkedList<>();
         /**

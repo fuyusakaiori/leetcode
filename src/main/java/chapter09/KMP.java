@@ -1,4 +1,4 @@
-package chapter08;
+package chapter09;
 
 /**
  * <h2>KMP 算法</h2>

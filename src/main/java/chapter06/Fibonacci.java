@@ -6,25 +6,21 @@ import java.util.Arrays;
  * <h2>斐波那契数列问题</h2>
  * <h3>1. 斐波那契基础问题</h3>
  * <h3>2. 泰波那契基础问题</h3>
+ * <h3>自定义问题: 母牛生崽（记得要去分析状态间的依赖关系）</h3>
+ * <h3>自定义问题: 细胞分裂</h3>
  * <h2>状态转移方程</h2>
  * <h3>dp[i] = dp[i - 1] + dp[i - 2]</h3>
  * <h3>dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3]</h3>
  */
-public class Fibonacci
-{
-    public static void main(String[] args)
-    {
-
-    }
+public class Fibonacci {
 
     private static int fibonacci(int number){
         return dp(number);
     }
 
     /**
-     * <p>暴力递归 => 记忆化搜索</p>
-     * <p></p>
-     * <p>时间复杂度: O(2^N) => 满二叉树的结点个数</p>
+     * <h3>暴力递归 => 记忆化搜索</h3>
+     * <h3>时间复杂度: O(2^N) => 满二叉树的结点个数</h3>
      */
     private static int dfs(int number, int[] dp){
         if (number == 0) return 0;
@@ -34,12 +30,10 @@ public class Fibonacci
     }
 
     /**
-     * <p>动态规划 => 状态压缩</p>
-     * <p></p>
-     * <p>注: 状态压缩就是一种优化策略, 实际是通过观察得出的</p>
-     * <p>注: 发现 dp 数组中的每个值实际上只依赖前两个值, 前两个值之前的都和当前值无关</p>
-     * <p></p>
-     * <p>时间复杂度: O(N)</p>
+     * <h3>动态规划 => 状态压缩</h3>
+     * <h3>注: 状态压缩就是一种优化策略, 实际是通过观察得出的</h3>
+     * <h3>注: 发现 dp 数组中的每个值实际上只依赖前两个值, 前两个值之前的都和当前值无关</h3>
+     * <h3>时间复杂度: O(N)</h3>
      */
     private static int dp(int number){
         // 1. Base Case + 前两个的值的状态

@@ -1,6 +1,8 @@
 package chapter01.sort;
 
 import utils.RandomUtil;
+import utils.Test;
+import utils.TestUtil;
 
 import java.util.Arrays;
 import java.util.Random;
@@ -9,11 +11,9 @@ public class QuickSort
 {
     public static void main(String[] args)
     {
-        RandomUtil random = new RandomUtil(10, 20);
-        int[] array = random.randomArrayWithReplica();
-        System.out.println(Arrays.toString(array));
-        quickSort(array, 0, array.length - 1);
-        System.out.println(Arrays.toString(array));
+        int[] numbers = {3, 2, 1, 5, 6, 4};
+        quickSort(numbers, 0, numbers.length - 1);
+        System.out.println(Arrays.toString(numbers));
     }
 
     /*
@@ -24,12 +24,8 @@ public class QuickSort
     private static void quickSort(int[] numbers, int left, int right){
         if (left < right){
             int critical = right - left;
-            // TODO 随机挑选一个值
             int randomIndex = new Random().nextInt(critical + 1);
-            // TODO
             swap(numbers, left + randomIndex, right);
-            // 开始分区计算
-            // TODO
             int[] criticals = partition(numbers, left, right, numbers[right]);
             quickSort(numbers, left, criticals[0] - 1);
             quickSort(numbers, criticals[1] + 1, right);
@@ -43,14 +39,11 @@ public class QuickSort
         int leftIndex = left;
         int rightIndex = right;
         // rightIndex 代表的是边界, 而不是边界值的位置
-        while (index != rightIndex + 1){
+        while (index < rightIndex + 1){
             if (numbers[index] > target){
-                swap(numbers, index, rightIndex);
-                rightIndex--;
+                swap(numbers, index, rightIndex--);
             }else if (numbers[index] < target){
-                swap(numbers, index, leftIndex);
-                leftIndex++;
-                index++;
+                swap(numbers, index++, leftIndex++);
             }else{
                 index++;
             }

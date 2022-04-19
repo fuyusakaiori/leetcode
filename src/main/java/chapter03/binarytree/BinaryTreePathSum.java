@@ -9,15 +9,10 @@ import java.util.*;
  * <h3>1. 路径总和 </h3>
  * <h3>2. 路径总和 II</h3>
  * <h3>3. 路径总和 III</h3>
- * <h3>4. 二叉树中最大路径和</h3>
+ * <h3>4. 求根结点到叶子结点数字之和</h3>
  */
 public class BinaryTreePathSum
 {
-    public static void main(String[] args)
-    {
-        Class<BinaryTreePathSum> binaryTreePathSumClass = BinaryTreePathSum.class;
-
-    }
 
     /**
      * <h3>思路: </h3>

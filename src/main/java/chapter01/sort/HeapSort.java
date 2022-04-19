@@ -3,21 +3,12 @@ package chapter01.sort;
 import utils.RandomUtil;
 import utils.TestUtil;
 
-public class HeapSort
-{
-    public static void main(String[] args)
-    {
-        // 问题① 负数作除法除不尽的时候会向上取整
-        RandomUtil random = new RandomUtil(10, 20);
-        TestUtil.sortTest(random, HeapSort::heapSort, "堆排序");
-
-    }
+public class HeapSort {
 
     // 利用大顶堆实现的递增排序
     private static void heapSort(int[] numbers){
-        if (numbers == null || numbers.length < 2){
+        if (numbers == null || numbers.length < 2)
             return;
-        }
         // 开始向数组中"添加"元素, 构建大顶堆
         int heapSize = 1;
         while (heapSize != numbers.length){

@@ -5,35 +5,15 @@ import utils.TestUtil;
 
 import java.util.Random;
 
-// 总结排序算法
-
-/**
- * ① 注意数组是否可能越界
- * ② 注意 > < = 符号怎么取
- * ③ 注意到底使用哪个索引去访问数组
- */
-public class Summary
-{
-    public static void main(String[] args)
-    {
-
-        RandomUtil random = new RandomUtil(10, 20);
-        TestUtil.sortTest(random, Summary::bubbleSort, "冒泡排序");
-        TestUtil.sortTest(random, Summary::selectionSort, "选择排序");
-        TestUtil.sortTest(random, Summary::insertionSort, "插入排序");
-        TestUtil.sortTest(random, Summary::mergeSort, "归并排序");
-        TestUtil.sortTest(random, Summary::quickSort, "快速排序");
-        TestUtil.sortTest(random, Summary::heapSort, "堆排序");
-        TestUtil.sortTest(random, Summary::radixSort, "基数排序");
-        System.out.println();
-        System.out.println(TestUtil.isRight(random, Summary::bubbleSort, "冒泡排序"));
-    }
+public class Summary {
 
     //===========================基于比较的算法=================================
-    // 1. 冒泡排序: 相邻交换 从零开始
-    // 基本有序的情况下会达到时间复杂度为 O(N)
-    private static void bubbleSort(int[] numbers)
-    {
+
+    /**
+     * <h3>冒泡排序: 相邻交换 从零开始</h3>
+     * <h3>基本有序的情况下会达到时间复杂度为 O(N)</h3>
+     */
+    private static void bubbleSort(int[] numbers) {
         for (int i = 0;i < numbers.length;i++){
             for (int j = 0;j < numbers.length - 1 - i;j++){
                 if (numbers[j] > numbers[j + 1])
@@ -42,10 +22,11 @@ public class Summary
         }
     }
 
-    // 2. 选择排序: 向后看 ++
-    // 时间复杂度为 O(N)
-    private static void selectionSort(int[] numbers)
-    {
+    /**
+     * <h3>选择排序: 向后看 ++</h3>
+     * <h3>时间复杂度为 O(N)</h3>
+     */
+    private static void selectionSort(int[] numbers) {
         for (int i = 0;i < numbers.length;i++){
             int minIndex = i;
             for (int j = i; j < numbers.length;j++){
@@ -56,10 +37,11 @@ public class Summary
         }
     }
 
-    // 3. 插入排序: 向前看 --
-    // 基本有序的情况下会达到时间复杂度为 O(N)
-    private static void insertionSort(int[] numbers)
-    {
+    /**
+     * <h3>插入排序: 向前看 --</h3>
+     * <h3>基本有序的情况下会达到时间复杂度为 O(N)</h3>
+     */
+    private static void insertionSort(int[] numbers) {
         for (int i = 0;i < numbers.length;i++){
             for (int j = i;j > 0;j--){
                 if (numbers[j] < numbers[j - 1])
@@ -68,8 +50,10 @@ public class Summary
         }
     }
 
-    // 4. 归并排序
-    // 时间复杂度为 O(N*logN), 空间复杂度为 O(N), 稳定
+    /**
+     * <h3>归并排序</h3>
+     * <h3>时间复杂度为 O(N*logN), 空间复杂度为 O(N), 稳定</h3>
+     */
     private static void mergeSort(int[] numbers){
         fork(numbers, 0, numbers.length - 1);
     }
@@ -103,8 +87,10 @@ public class Summary
         }
     }
 
-    // 5. 快速排序
-    // 期望的时间复杂度为 O(N*logN), 空间复杂度为 O(logN), 不稳定
+    /**
+     * <h3>快速排序</h3>
+     * <h3>期望的时间复杂度为 O(N*logN), 空间复杂度为 O(1), 不稳定</h3>
+     */
     private static void quickSort(int[] numbers){
         process(numbers, 0, numbers.length - 1);
     }
@@ -134,8 +120,10 @@ public class Summary
         return new int[]{--leftIndex, ++rightIndex};
     }
 
-    // 6. 堆排序
-    // 时间复杂度为 O(N*logN), 空间复杂度为O(1), 不稳定
+    /**
+     * <h3>堆排序</h3>
+     * <h3>时间复杂度为 O(N*logN), 空间复杂度为O(1), 不稳定</h3>
+     */
     private static void heapSort(int[] numbers){
         int heapSize = 1;
         while (heapSize < numbers.length){
@@ -172,7 +160,6 @@ public class Summary
         }
     }
 
-
     // 构建小顶堆: 优先级队列就是小顶堆
     private static void heapInsert(int[] numbers, int index, Object...args){
         int parentIndex = (index - 1) / 2;
@@ -199,7 +186,10 @@ public class Summary
     }
 
     //===========================基于统计的排序=================================
-    // 7. 基数排序
+
+    /**
+     * <h3>基数排序</h3>
+     */
     private static void radixSort(int[] numbers){
         final int radix = 10;
         int[] bucket = new int[numbers.length];
@@ -240,17 +230,7 @@ public class Summary
         return (number / (int)Math.pow(10, digit - 1)) % 10;
     }
 
-
-
-    // 8. 希尔排序
-
-    //===========================工具方法=================================
-    // 交换
-
-    private static void swap(int[] numbers, int first, int second)
-    {
-
-        // 不采用位运算的方式进行交换, 避免自己和自己交换
+    private static void swap(int[] numbers, int first, int second) {
         int temp = numbers[first];
         numbers[first] = numbers[second];
         numbers[second] = temp;

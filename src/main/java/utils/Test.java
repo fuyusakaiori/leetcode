@@ -1,5 +1,6 @@
 package utils;
 
+
 import java.util.*;
 
 /**
@@ -7,36 +8,27 @@ import java.util.*;
  */
 public class Test
 {
-    public static void main(String[] args) {
-        TreeNode root = new TreeNode(1);
-        TreeNode node1 = new TreeNode(2);
-        TreeNode node2 = new TreeNode(3);
-        TreeNode node3 = new TreeNode(4);
-        TreeNode node4 = new TreeNode(5);
 
-        root.left = node1;
-        root.right = node2;
-        node1.left = node3;
-        node1.right = node4;
-
-        diameterOfBinaryTree(root);
+    public static void main(String[] args){
+        combinationSum3(9, 45);
     }
 
-    private static int max = 0;
-
-    public static int diameterOfBinaryTree(TreeNode root) {
-        dfs(root);
-        return max;
+    public static List<List<Integer>> combinationSum3(int k, int n) {
+        List<List<Integer>> results = new LinkedList<>();
+        dfs(n, 1, k, results, new LinkedList<>());
+        return results;
     }
 
-    public static int dfs(TreeNode root){
-        if(root == null)
-            return 0;
-        int leftDepth = diameterOfBinaryTree(root.left);
-        int rightDepth = diameterOfBinaryTree(root.right);
-
-        max = Math.max(max, leftDepth + rightDepth);
-        return Math.max(leftDepth, rightDepth) + 1;
+    public static void dfs(int target, int number, int count, List<List<Integer>> results, List<Integer> result){
+        if(target == 0 && count == 0){
+            results.add(new LinkedList<>(result));
+            return;
+        }
+        if(number > 9)
+            return;
+        dfs(target, number + 1, count, results, result);
+        result.add(number);
+        dfs(target - number, number + 1, count - 1, results, result);
+        result.remove(result.size() - 1);
     }
-
 }

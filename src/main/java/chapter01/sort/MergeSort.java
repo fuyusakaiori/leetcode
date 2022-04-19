@@ -5,19 +5,7 @@ import utils.TestUtil;
 
 import java.util.ArrayList;
 
-public class MergeSort
-{
-    /*
-    1、要学会肉眼 Debug, 笔试的时候很有可能不给你提供本地 IDE 或者调试功能
-    2、两个错误点: ① 位运算的优先级非常低 ② 更新原来的数组的时候不是从 0 开始的
-    3、归并排序能够记住部分有序的信息, 冒泡、插入、选择排序都是无法记住有序的信息
-     */
-    public static void main(String[] args)
-    {
-        RandomUtil random = new RandomUtil(10, 20);
-        TestUtil.sortTest(random, MergeSort::mergeSort, "归并排序");
-    }
-
+public class MergeSort {
     private static void mergeSort(int[] numbers){
         fork(numbers, 0, numbers.length - 1);
     }

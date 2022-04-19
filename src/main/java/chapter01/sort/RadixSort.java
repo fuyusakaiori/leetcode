@@ -5,18 +5,8 @@ import utils.RandomUtil;
 import java.util.Arrays;
 
 // 基数排序: 只能针对非负整数
-public class RadixSort
-{
-    public static void main(String[] args)
-    {
-        RandomUtil random = new RandomUtil(10, 200);
-        int[] array = random.randomArrayNoReplica();
-        System.out.println(Arrays.toString(array));
-        radixSort(array, 0, array.length - 1, maxBits(array));
-        System.out.println(Arrays.toString(array));
-    }
+public class RadixSort {
 
-    // 确定最大值的位数
     private static int maxBits(int[] numbers){
         // 1. 先遍历寻找到的最大值
         int max = 0;
@@ -32,27 +22,10 @@ public class RadixSort
         return res;
     }
 
-    // 获取每个数的特定位置上的数字
     private static int getDigit(int number, int digit){
-//        int count = 0;
-//        int res = 0;
-//        while (count < digit){
-//            res = number % 10;
-//            number /= 10;
-//            count++;
-//        }
         return (number / (int) Math.pow(10, digit - 1)) % 10;
     }
 
-    // 基数排序本体: 采用非常妙的优化方式
-    // 核心: 节省原本方式造成的二维数组的开销
-    /**
-     *
-     * @param numbers 数组
-     * @param left 排序部分的左边界
-     * @param right 排序部分的右边界
-     * @param bits 最大值的位数
-     */
     private static void radixSort(int[] numbers, int left, int right, int bits){
         // 1. 准备词频数组, 辅助数组
         final int radix = 10;

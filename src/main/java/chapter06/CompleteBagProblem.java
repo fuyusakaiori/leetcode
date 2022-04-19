@@ -1,6 +1,6 @@
 package chapter06;
 
-import java.util.Arrays;
+import java.util.*;
 
 /**
  * <h2>完全背包问题</h2>
@@ -8,12 +8,9 @@ import java.util.Arrays;
  * <h3>2. 零钱兑换 II</h3>
  * <h3>3. 完全平方数</h3>
  * <h3>4. 经典背包问题</h3>
- * <h2>动态转移方程</h2>
- * <h3>dp[amount] = Math.min(dp[amount], dp[amount - coins[index]])</h3>
- * <h3>dp[amount] += dp[amount - coins[index]]</h3>
- * <h3>dp[index] = Math.min(min, dp[index - digit * digit] + 1)</h3>
- * <p></p>
- * <p>注: 完全背包问题在暴力递归的过程中一定含有循环过程</p>
+ * <h3>5. 单词拆分</h3>
+ * <h3>6. 单词拆分 II</h3>
+ * <h3>注: 完全背包问题在暴力递归的过程中一定含有循环过程</h3>
  */
 public class CompleteBagProblem
 {
@@ -123,6 +120,61 @@ public class CompleteBagProblem
         }
         dp[number] = min;
         return dp[number];
+    }
+
+    /**
+     * <h3>思路: 单词拆分</h3>
+     */
+    private static boolean wordBreak(String str, List<String> wordDict){
+        boolean[] dp = new boolean[str.length() + 1];
+        Set<String> dict = new HashSet<>(wordDict);
+        dp[str.length()] = true;
+        for (int end = str.length();end >= 0;end--){
+            for (int start = end - 1;start >= 0;start--){
+                if (dp[end] && dict.contains(str.substring(start, end))){
+                    dp[start] = true;
+                    break;
+                }
+            }
+        }
+
+        return dp[0];
+    }
+
+    private static int dfs(String str, int start, Set<String> dict, int[] dp){
+        if (start == str.length()) return 1;
+        if (dp[start] != 0) return dp[start];
+        for (int end = start + 1;end <= str.length();end++){
+            if (dict.contains(str.substring(start, end))){
+                if (dfs(str, end, dict, dp) == 1) return dp[start] = 1;
+            }
+        }
+        return dp[start] = -1;
+    }
+
+    /**
+     * <h3>思路: 单词拆分</h3>
+     */
+    private final static List<String> sentences = new LinkedList<>();
+
+    private static List<String> wordBreak(List<String> wordDict, String str) {
+        dfs(str, new HashSet<>(wordDict), new StringBuilder(), 0);
+        return sentences;
+    }
+
+    public static void dfs(String str, Set<String> dict, StringBuilder sb, int start){
+        if(start == str.length()){
+            sentences.add(sb.toString().substring(0, sb.length() - 1));
+            return;
+        }
+        for(int end = start + 1;end <= str.length();end++){
+            String sub = str.substring(start, end);
+            if(dict.contains(sub)){
+                sb.append(sub).append(" ");
+                dfs(str, dict, sb, end);
+                sb.delete(sb.length() - sub.length() - 1, sb.length());
+            }
+        }
     }
 
 

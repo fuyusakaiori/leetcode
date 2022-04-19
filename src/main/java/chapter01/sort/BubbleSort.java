@@ -4,20 +4,7 @@ import utils.RandomUtil;
 
 import java.util.Arrays;
 
-/**
- * 冒泡排序
- */
-public class BubbleSort
-{
-    public static void main(String[] args)
-    {
-        RandomUtil random = new RandomUtil(10, 20);
-        int[] array = random.randomArrayNoReplica();
-        System.out.println("排序前: " + Arrays.toString(array));
-        bubbleSort(array);
-        System.out.println("排序后: " + Arrays.toString(array));
-
-    }
+public class BubbleSort {
 
     // 冒泡排序算法
     private static void bubbleSort(int[] numbers){
@@ -33,8 +20,7 @@ public class BubbleSort
                 }
             }
             // 改良: 如果一轮排序中一次都没有交换, 那么就证明已经有序, 跳出循环即可
-            if (flag)
-                break;
+            if (flag) break;
             flag = true;
         }
     }

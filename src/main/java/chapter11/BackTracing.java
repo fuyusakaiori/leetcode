@@ -181,14 +181,47 @@ public class BackTracing {
      * <h3>思路: 子集</h3>
      */
     private static List<List<Integer>> subsets(int[] nums){
-        return null;
+        List<List<Integer>> results = new LinkedList<>();
+        dfs(nums, new LinkedList<>(), results, 0);
+        return results;
+    }
+
+    private static void dfs(int[] nums, List<Integer> result, List<List<Integer>> results, int index){
+        if(index == nums.length){
+            results.add(new LinkedList<>(result));
+            return;
+        }
+        dfs(nums, result, results, index + 1);
+        result.add(nums[index]);
+        dfs(nums, result, results, index);
+        result.remove(result.size() - 1);
     }
 
     /**
      * <h3>思路: 子集</h3>
      */
     private static List<List<Integer>> subsetsWithDup(int[] nums){
-        return null;
+        Arrays.sort(nums);
+        List<List<Integer>> results = new LinkedList<>();
+        dfs(nums, new LinkedList<>(), results, false, 0);
+        return results;
+    }
+
+    /**
+     * <h3>1. 如果递归中嵌套循环, 可以直接判断前后元素是否重复, 避免子集重复, 不过本质就是双重循环</h3>
+     * <h3>2. 可以通过添加变量来达到嵌套循环的效果, 不过时间复杂度不变</h3>
+     */
+    private static void dfs(int[] nums, List<Integer> result, List<List<Integer>> results, boolean choose, int index){
+        if (index == nums.length){
+            results.add(new LinkedList<>(result));
+            return;
+        }
+        dfs(nums, result, results, false, index + 1);
+        if (!choose && index > 0 && nums[index - 1] == nums[index])
+            return;
+        result.add(nums[index]);
+        dfs(nums, result, results, true, index + 1);
+        result.remove(result.size() - 1);
     }
 
 }

@@ -8,6 +8,7 @@ import java.util.*;
  * <h3>2. 两数之和 II</h3>
  * <h3>3. 三数之和</h3>
  * <h3>4. 四数之和</h3>
+ * <h3>5. 最接近的三数之和</h3>
  */
 public class NumberSum {
 
@@ -108,6 +109,36 @@ public class NumberSum {
             }
         }
         return results;
+    }
+
+    private static int threeSumClosest(int[] numbers, int target){
+        // 1. 排序
+        Arrays.sort(numbers);
+        // 2. 三指针
+        int result = 0, minMinus = Integer.MAX_VALUE;
+
+        for (int first = 0; first < numbers.length; first++){
+            if(first > 0 && numbers[first] == numbers[first - 1])
+                continue;
+            int third = numbers.length - 1;
+            int newTarget = target - numbers[first];
+            for(int second = first + 1;second < numbers.length;second++){
+                if(second > first + 1 && numbers[second] == numbers[second - 1])
+                    continue;
+                while(third > second && numbers[third] + numbers[second] > newTarget){
+                    third--;
+                }
+                // 注: 核心部分
+                int left = third != second ? numbers[third] + numbers[second] - newTarget:Integer.MAX_VALUE;
+                int right = third != numbers.length - 1 ?numbers[third + 1] + numbers[second] - newTarget:Integer.MAX_VALUE;
+                int minus = Math.abs(left) < Math.abs(right) ? left: right;
+                if(Math.abs(minus) < minMinus){
+                    minMinus = Math.abs(minus);
+                    result = minus + target;
+                }
+            }
+        }
+        return result;
     }
 
 }

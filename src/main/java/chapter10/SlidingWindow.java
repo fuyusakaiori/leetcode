@@ -1,6 +1,5 @@
-package chapter11;
+package chapter10;
 
-import utils.Important;
 
 import java.util.*;
 
@@ -28,7 +27,6 @@ public class SlidingWindow {
      * <h3>4. 动态规划</h3>
      * <h3>注: 重新按照套路写一版</h3>
      */
-    @Important
     private static int lengthOfLongestSubstring(String str){
         // 0. 准备变量
         int maxLength = 0;
@@ -63,7 +61,6 @@ public class SlidingWindow {
      * <h3>7. 然后不断移动右指针, 直到有效数字的个数等于 needs 的长度, 就认为窗口中的字符串满足条件了</h3>
      * <h3>8. 然后移动左指针, 不断移除字符, 直到不满足条件为止</h3>
      */
-    @Important
     private static String minWindow(String firstStr, String secondStr){
         // 1. 如果第一个子串长度小于第二个子串, 那么显然就不需要继续判断了
         if (firstStr.length() < secondStr.length()) return "";
@@ -178,7 +175,6 @@ public class SlidingWindow {
      * <h3>1.2 如果在比较最大值的时候发现当前最值已经不在窗口中了, 那么就将最大值淘汰, 看下一个是否在范围内</h3>
      * <h3>2. 单调队列 / 双端队列</h3>
      */
-    @Important
     private static int[] maxSlidingWindow1(int[] nums, int k){
         int left = 0, right = 0;
         int[] maxArray = new int[nums.length - k + 1];
@@ -307,7 +303,7 @@ public class SlidingWindow {
                 return true;
             // 5. 如果不重复就直接放进去
             window.add(nums[right++]);
-            // 6. 窗口达到要求的大小时, 开始移动右指针
+            // 6. 窗口达到要求的大小时, 开始移动左指针
             if (right >= k + 1)
                 window.remove(nums[left++]);
         }
@@ -341,7 +337,7 @@ public class SlidingWindow {
     }
 
     /**
-     * <h3>思路: 长队最小子数组</h3>
+     * <h3>思路: 长度最小子数组</h3>
      * <h3>1. 滑动窗口</h3>
      * <h3>1.1 如果目前窗口中的和小于目标值, 就不断向右移动指针去增加和</h3>
      * <h3>1.2 如果目前窗口中的和大于目标值, 就右移左指针去减少和</h3>

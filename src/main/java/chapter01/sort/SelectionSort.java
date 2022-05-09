@@ -1,8 +1,5 @@
 package chapter01.sort;
 
-import utils.RandomUtil;
-import utils.TestUtil;
-
 public class SelectionSort {
 
     private static void selectionSort(int[] numbers){

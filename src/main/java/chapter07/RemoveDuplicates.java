@@ -1,6 +1,5 @@
 package chapter07;
 
-import utils.Important;
 
 /**
  * <h2>删除数组中的重复元素</h2>
@@ -29,7 +28,6 @@ public class RemoveDuplicates {
      * <h3>思路: 删除数组中的重复元素 II</h3>
      * <h3>注: 这个解法其实有点不好想, 也不是那么好理解, 建议多看几次</h3>
      */
-    @Important
     private static int removeDuplicates(int[] nums, int k){
         int previous = 0;
         for(int next = 0;next < nums.length;next++){

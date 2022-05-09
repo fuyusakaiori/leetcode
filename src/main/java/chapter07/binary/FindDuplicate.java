@@ -1,4 +1,4 @@
-package chapter10;
+package chapter07.binary;
 
 /**
  * <h2>寻找重复数</h2>

@@ -1,4 +1,4 @@
-package chapter10;
+package chapter07.binary;
 
 /**
  * <h2>搜索二维矩阵问题</h2>

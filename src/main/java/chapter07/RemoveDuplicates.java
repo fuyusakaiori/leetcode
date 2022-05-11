@@ -29,13 +29,14 @@ public class RemoveDuplicates {
      * <h3>注: 这个解法其实有点不好想, 也不是那么好理解, 建议多看几次</h3>
      */
     private static int removeDuplicates(int[] nums, int k){
-        int previous = 0;
-        for(int next = 0;next < nums.length;next++){
-            // 注: 前面 k 位直接保留, k 位之后再判断
-            if (previous < k || nums[previous - k] != nums[next])
-                nums[previous++] = nums[next];
+        int cur = 0;
+        for (int index = 0;index < nums.length;index++){
+            // 注: 因为每个元素仅允许出现 k 次, 所以只需要将比较大小为 k 的区间的左右边界是否相等
+            if (cur < k || nums[cur - k] != nums[index])
+                // 注: 如果左右边界相等, 那么就证明这个区间已经有超过 k 个相同元素, 所以就不要放进数组中了
+                nums[cur++] = nums[index];
         }
-        return previous;
+        return cur;
     }
 
     /**

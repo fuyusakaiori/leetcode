@@ -1,8 +1,5 @@
 package chapter01.sort;
 
-import utils.RandomUtil;
-import utils.TestUtil;
-
 import java.util.Random;
 
 public class Summary {

@@ -1,9 +1,5 @@
 package chapter01.sort;
 
-import utils.RandomUtil;
-
-import java.util.Arrays;
-
 public class BubbleSort {
 
     // 冒泡排序算法

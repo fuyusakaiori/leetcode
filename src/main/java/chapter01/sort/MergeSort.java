@@ -1,9 +1,5 @@
 package chapter01.sort;
 
-import utils.RandomUtil;
-import utils.TestUtil;
-
-import java.util.ArrayList;
 
 public class MergeSort {
     private static void mergeSort(int[] numbers){

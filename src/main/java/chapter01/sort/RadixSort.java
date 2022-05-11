@@ -1,6 +1,5 @@
 package chapter01.sort;
 
-import utils.RandomUtil;
 
 import java.util.Arrays;
 

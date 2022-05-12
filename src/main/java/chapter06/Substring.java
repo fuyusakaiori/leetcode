@@ -1,5 +1,6 @@
 package chapter06;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import java.util.List;
  * <h3>4. 分割回文子串 II</h3>
  * <h3>5. 最大子数组和</h3>
  * <h3>6. 乘积最大子数组</h3>
+ * <h3>7. 最长重复数组</h3>
  * <h3>注: 这类题目解法基本一致: ① 中心扩展 ② {@code Manacher} 算法 ③ d动态规划</h3>
  */
 public class Substring {
@@ -366,5 +368,55 @@ public class Substring {
                 Math.min(nums[index] * values[1], nums[index]));
         maxProduct = Math.max(maxProduct, maxValue);
         return new int[]{maxValue, minValue};
+    }
+
+    /**
+     * <h3>思路: 最长重复数组</h3>
+     * <h3>1. 动态规划</h3>
+     * <h3>2. 滑动窗口</h3>
+     * <h3>3. 二分查找 + 哈希表: 这种做法太复杂了, 没有必要</h3>
+     */
+    private static int findLength1(int[] nums1, int[] nums2){
+        int maxLength = 0;
+        int[][] dp = new int[nums1.length + 1][nums2.length + 1];
+        for(int first = nums1.length - 1;first >= 0;first--){
+            for(int second = nums2.length - 1;second >= 0;second--){
+                if(nums1[first] == nums2[second])
+                    dp[first][second] = dp[first + 1][second + 1] + 1;
+                maxLength = Math.max(maxLength, dp[first][second]);
+            }
+        }
+        return maxLength;
+    }
+
+    private static int findLength2(int[] nums1, int[] nums2){
+        // 1. 初始化
+        int[][] dp = new int[nums1.length][nums2.length];
+        for (int[] array : dp){
+            Arrays.fill(array, -1);
+        }
+        // 2. 填表
+        int maxLength = 0;
+        for (int first = 0;first < nums1.length;first++){
+            for (int second = 0;second < nums2.length;second++){
+                maxLength = Math.max(maxLength, dfs(nums1, first, nums2, second, dp));
+            }
+        }
+        return maxLength;
+    }
+
+    private static int dfs(int[] nums1, int first, int[] nums2, int second, int[][] dp){
+        if (first == nums1.length || second == nums2.length)
+            return 0;
+        if (dp[first][second] != -1)
+            return dp[first][second];
+        if (nums1[first] == nums2[second])
+            return dp[first][second] = dfs(nums1, first + 1, nums2, second + 1, dp) + 1;
+        return dp[first][second] = 0;
+    }
+
+
+    private static int findLength3(int[] nums1, int[] nums2){
+        return 0;
     }
 }

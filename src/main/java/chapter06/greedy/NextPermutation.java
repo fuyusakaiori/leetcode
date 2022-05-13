@@ -1,10 +1,11 @@
-package chapter07;
+package chapter06.greedy;
 
 /**
  * <h2>下一个排列</h2>
  * <h3>注: 一次性题目, 没有任何技巧可言, 非常难想</h3>
  */
-public class NextPermutation {
+public class NextPermutation
+{
 
     /**
      * <h3>思路: 下一个排列</h3>

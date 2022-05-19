@@ -2,8 +2,6 @@ package chapter02;
 
 
 import utils.ListNode;
-import utils.RandomUtil;
-import utils.Test;
 import utils.TestUtil;
 
 import java.util.ArrayList;

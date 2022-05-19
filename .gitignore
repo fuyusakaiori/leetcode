@@ -33,7 +33,7 @@ hs_err_pid*
 .idea/misc.xml
 .idea/uiDesigner.xml
 .idea/vcs.xml
-LeetCode.iml
+leetCode.iml
 out/
 pom.xml
 target/

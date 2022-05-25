@@ -1,9 +1,9 @@
-package chapter11;
+package chapter11.dynamic;
 
 /**
  * <h2>斐波那契数列问题</h2>
- * <h3>1. 斐波那契基础问题</h3>
- * <h3>2. 泰波那契基础问题</h3>
+ * <h3>1. 斐波那契</h3>
+ * <h3>2. 泰波那契</h3>
  * <h3>自定义问题: 母牛生崽（记得要去分析状态间的依赖关系）</h3>
  * <h3>自定义问题: 细胞分裂</h3>
  * <h2>状态转移方程</h2>
@@ -12,41 +12,20 @@ package chapter11;
  */
 public class Fibonacci {
 
-    private static int fibonacci(int number){
-        return dp(number);
-    }
-
     /**
-     * <h3>暴力递归 => 记忆化搜索</h3>
-     * <h3>时间复杂度: O(2^N) => 满二叉树的结点个数</h3>
+     * <h3>思路: 斐波那契数</h3>
+     * <h3>1. 动态规划</h3>
+     * <h3>2. 状态压缩</h3>
+     * <h3>3. 矩阵快速幂</h3>
      */
-    private static int dfs(int number, int[] dp){
-        if (number == 0) return 0;
-        if (number == 1) return 1;
-        if (dp[number] != 0) return dp[number];
-        return dp[number] = dfs(number - 1, dp) + dfs(number - 2, dp);
-    }
-
-    /**
-     * <h3>动态规划 => 状态压缩</h3>
-     * <h3>注: 状态压缩就是一种优化策略, 实际是通过观察得出的</h3>
-     * <h3>注: 发现 dp 数组中的每个值实际上只依赖前两个值, 前两个值之前的都和当前值无关</h3>
-     * <h3>时间复杂度: O(N)</h3>
-     */
-    private static int dp(int number){
-        // 1. Base Case + 前两个的值的状态
-        int first = 0;
-        int second = 1;
-        int result = 0;
-        // 2. 迭代: 从 Base Case 之后开始 => 3. 状态压缩
-        for (int index = 2;index <= number;index++){
-            // 状态转移方程
-            result = first + second;
-            // 前两个值状态更新
+    private static int fibonacci(int n){
+        int first = 0, second = 1, third = 0;
+        for(int index = 0;index <= n - 2;index++){
+            third = first + second;
             first = second;
-            second = result;
+            second = third;
         }
-        return result;
+        return third;
     }
 
     /**
@@ -97,5 +76,47 @@ public class Fibonacci {
             }
         }
         return result;
+    }
+
+    /**
+     * <h3>思路: 母牛生崽</h3>
+     */
+    private static int cowGivingBirth(int year){
+        int[] dp = new int[year + 1];
+        for(int index = 1;index < dp.length;index++){
+            dp[index] = index > 3 ? dp[index - 1] + dp[index - 3]: index;
+        }
+        return dp[year];
+    }
+
+    /**
+     * <h3>1. 上一年的所有牛肯定都会存活, 所以今年的数量一定会依赖上一年的数量</h3>
+     * <h3>2. 此外, 前三年的牛已经在上一年成熟, 并且会生一头新牛, 所以也会依赖前三年的数量</h3>
+     */
+    private static int dfs(int year, int[] dp){
+        if(year == 1 || year == 2 || year == 3) return year;
+        if (dp[year] != 0) return dp[year];
+        return dp[year] = dfs(year - 1, dp) + dfs(year - 3, dp);
+    }
+
+    /**
+     * <h3>4. 细胞分裂</h3>
+     * <h4>1. 第一秒只有 1个细胞, 该细胞从第 2 秒开始分裂</h4>
+     * <h4>2. 产生的新细胞会在经过 2 秒之后开始分裂</h4>
+     * <h4>3. 分裂的过程中, k 个细胞会聚合成一组, 如果此时存在单独成组的细胞, 那么就会死亡</h4>
+     * <h4>4. 问经过 n 秒之后, 会有多少个细胞</h4>
+     * <p>注: 和之前的母牛生崽问题区别就在于, 细胞是会死亡的</p>
+     * @param seconds 细胞分裂的时间
+     * @param convergence 多少个细胞聚合成一组
+     */
+    private static int cellDivision(int seconds, int convergence){
+
+        return 0;
+    }
+
+    private static int dfs(int seconds, int convergence, int[] dp){
+        if (seconds == 1 || seconds == 2) return seconds;
+        int base = dfs(seconds - 1, convergence, dp) + dfs(seconds - 2, convergence, dp);
+        return dp[seconds] = base % convergence == 1 ? base - 1: base;
     }
 }

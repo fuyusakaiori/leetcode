@@ -1,4 +1,4 @@
-package chapter05;
+package chapter05.random;
 
 import java.util.HashMap;
 import java.util.Random;

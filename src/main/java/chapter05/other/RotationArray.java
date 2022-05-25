@@ -1,4 +1,4 @@
-package chapter05;
+package chapter05.other;
 
 /**
  * <h2>轮转数组</h2>

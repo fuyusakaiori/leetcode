@@ -45,7 +45,6 @@ public class QuickSort
                 index++;
             }
         }
-
         return new int[]{leftIndex, rightIndex};
     }
 

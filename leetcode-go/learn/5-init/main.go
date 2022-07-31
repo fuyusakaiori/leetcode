@@ -9,9 +9,9 @@ package main
 (4) 静态导入
 */
 import (
-	_ "leetcode-go/5-init/lib1"
-	alias "leetcode-go/5-init/lib2"
-	. "leetcode-go/5-init/lib3"
+	_ "leetcode-go/learn/5-init/lib1"
+	alias "leetcode-go/learn/5-init/lib2"
+	. "leetcode-go/learn/5-init/lib3"
 )
 
 func main() {

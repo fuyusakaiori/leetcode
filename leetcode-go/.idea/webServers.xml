@@ -5,7 +5,7 @@
       <webServer id="1e37b580-b1d3-44e0-900a-477f84b11e0e" name="leetcode" url="http://42.192.84.87">
         <fileTransfer accessType="SFTP" host="42.192.84.87" port="22" sshConfigId="241c5331-7623-4b29-9b65-eb9c10b79473" sshConfig="root@42.192.84.87:22 key" keyPair="true">
           <advancedOptions>
-            <advancedOptions dataProtectionLevel="Private" passiveMode="true" shareSSLContext="true" />
+            <advancedOptions dataProtectionLevel="Private" keepAliveTimeout="10000" passiveMode="true" shareSSLContext="true" />
           </advancedOptions>
         </fileTransfer>
       </webServer>

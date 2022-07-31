@@ -10,7 +10,8 @@ import java.util.LinkedList;
  * <h3>2. 二叉树的中序遍历</h3>
  * <h3>3. 二叉树的后序遍历</h3>
  */
-public class BinaryTreeDeepFirstSearch {
+public class BinaryTreeDFS
+{
 
     /**
      * <h3>思路: 递归实现前序遍历</h3>

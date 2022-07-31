@@ -10,7 +10,7 @@ import java.util.*;
  * <h3>2. 二叉树层序遍历 II</h3>
  * <h3>3. 锯齿形遍历</h3>
  */
-public class BinaryTreeBreathFirstSearch
+public class BinaryTreeBFS
 {
     public static void main(String[] args)
     {

@@ -1,8 +1,7 @@
 package chapter03.travel;
 
-import utils.TreeNode;
+import chapter03.TreeNode;
 
-import java.util.Currency;
 import java.util.LinkedList;
 import java.util.Queue;
 

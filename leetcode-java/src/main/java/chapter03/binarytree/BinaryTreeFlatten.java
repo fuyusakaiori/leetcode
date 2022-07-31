@@ -1,10 +1,9 @@
 package chapter03.binarytree;
 
-import utils.TreeNode;
+import chapter03.TreeNode;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
 
 /**
  * 二叉树展开为链表

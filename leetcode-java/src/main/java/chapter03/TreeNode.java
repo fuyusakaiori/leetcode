@@ -1,4 +1,4 @@
-package utils;
+package chapter03;
 
 public class TreeNode
 {

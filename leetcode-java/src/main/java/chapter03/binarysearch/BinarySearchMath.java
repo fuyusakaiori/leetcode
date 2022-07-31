@@ -1,9 +1,7 @@
 package chapter03.binarysearch;
 
-import utils.TreeNode;
+import chapter03.TreeNode;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 

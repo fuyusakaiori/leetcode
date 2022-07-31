@@ -1,6 +1,6 @@
 package chapter03.travel;
 
-import utils.TreeNode;
+import chapter03.TreeNode;
 
 import java.util.LinkedList;
 
@@ -10,29 +10,25 @@ import java.util.LinkedList;
  * <h3>2. 二叉树的中序遍历</h3>
  * <h3>3. 二叉树的后序遍历</h3>
  */
-public class BinaryTreeDeepFirstSearch
-{
-    public static void main(String[] args) {
-
-    }
+public class BinaryTreeDeepFirstSearch {
 
     /**
      * <h3>思路: 递归实现前序遍历</h3>
      * @param root 根结点
      */
-    private static void preorderDFS(TreeNode root){
+    private static void preorder1(TreeNode root){
         if (root == null) return;
         // 这里可以执行任意操作
         System.out.println(root.value);
-        preorderDFS(root.left);
-        preorderDFS(root.right);
+        preorder1(root.left);
+        preorder1(root.right);
     }
 
     /**
      * <h3>思路: 循环实现前序遍历 => 类似于层序遍历</h3>
      * @param root 根结点
      */
-    private static void preorderStack(TreeNode root){
+    private static void preorder2(TreeNode root){
         LinkedList<TreeNode> stack = new LinkedList<>();
         if (root != null) stack.push(root);
         while (!stack.isEmpty()){
@@ -50,12 +46,12 @@ public class BinaryTreeDeepFirstSearch
      * <h3>思路: 递归实现中序遍历</h3>
      * @param root 根结点
      */
-    private static void infixorderDFS(TreeNode root){
+    private static void infixorder1(TreeNode root){
         if (root == null) return;
-        infixorderDFS(root.left);
+        infixorder1(root.left);
         // 这里可以做任何操作
         System.out.println(root.value);
-        infixorderDFS(root.right);
+        infixorder1(root.right);
     }
 
     /**
@@ -65,7 +61,7 @@ public class BinaryTreeDeepFirstSearch
      * <h3>3. 之后出栈相当于处理左子结点, 也相当于处理父结点, 所以出栈之后就会去遍历也就是处理右子结点</h3>
      * @param root 根结点
      */
-    private static void infixorderStack(TreeNode root){
+    private static void infixorder2(TreeNode root){
         LinkedList<TreeNode> stack = new LinkedList<>();
         while (!stack.isEmpty() || root != null){
             if (root != null){
@@ -83,10 +79,10 @@ public class BinaryTreeDeepFirstSearch
      * <h3>思路: 递归实现后序遍历</h3>
      * @param root 根结点
      */
-    private static void postorderDFS(TreeNode root){
+    private static void postorder1(TreeNode root){
         if (root == null) return;
-        postorderDFS(root.left);
-        postorderDFS(root.right);
+        postorder1(root.left);
+        postorder1(root.right);
         // 这里可以执行任意操作
         System.out.println(root.value);
     }
@@ -98,7 +94,7 @@ public class BinaryTreeDeepFirstSearch
      * <h3>2. 采用单个栈实现: 出栈的时候借助临时变量判断是继续压栈, 还是接着出栈</h3>
      * @param root 根结点
      */
-    private static void postorderStack(TreeNode root){
+    private static void postorder2(TreeNode root){
         LinkedList<TreeNode> stack = new LinkedList<>();
         LinkedList<TreeNode> collection = new LinkedList<>();
         if (root != null) stack.push(root);
@@ -116,7 +112,7 @@ public class BinaryTreeDeepFirstSearch
         }
     }
 
-    private static void postorderUnRecursiveSingleStack(TreeNode root){
+    private static void postorder3(TreeNode root){
         if (root == null)
             return;
         TreeNode current = null;

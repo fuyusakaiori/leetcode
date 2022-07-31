@@ -1,16 +1,11 @@
 package chapter03.travel;
 
-import utils.TreeNode;
+import chapter03.TreeNode;
 
 /**
  * <h2>Morris 算法</h2>
  */
-public class BinaryTreeMorris
-{
-    public static void main(String[] args)
-    {
-
-    }
+public class BinaryTreeMorris {
 
     /**
      * <h3>产生 Morris 序的算法</h3>
@@ -99,36 +94,6 @@ public class BinaryTreeMorris
             }
             current = current.right;
         }
-    }
-
-    /**
-     * <h3> Morris 序产生后序遍历</p>
-     * <h3>注: Morris 产生后序是比较麻烦的</h3>
-     * @param root 根结点
-     */
-    private static void postmorrsi(TreeNode root){
-        TreeNode current = root;
-        TreeNode mostRight = null;
-
-        while (current != null){
-            if (current.left != null){
-                mostRight = current.left;
-                while (mostRight.right != null && mostRight.right != current)
-                    mostRight = mostRight.right;
-                if (mostRight.right == null){
-                    // 第一次到达可以到达两次的结点时, 不做任何输出
-                    mostRight.right = current;
-                    current = current.left;
-                    continue;
-                }else{
-                    // 第二次到达的时候, 立刻输出
-                    mostRight.right = null;
-                    printTree(current.left);
-                }
-            }
-            current = current.right;
-        }
-        printTree(root);
     }
 
     private static void postorderMorris(TreeNode root){

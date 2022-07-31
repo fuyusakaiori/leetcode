@@ -1,7 +1,5 @@
 package chapter03;
 
-import utils.TreeNode;
-
 import java.util.LinkedList;
 import java.util.Queue;
 

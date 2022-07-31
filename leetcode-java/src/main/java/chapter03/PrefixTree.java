@@ -1,8 +1,6 @@
 package chapter03;
 
 
-import utils.TreeNode;
-
 /**
  * <p>实现前缀树</p>
  * <p>前缀树的目的</p>

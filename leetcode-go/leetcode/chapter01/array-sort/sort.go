@@ -209,5 +209,4 @@ func main() {
 	fmt.Printf("before sort heap numbers = %v\n", numbers)
 	HeapSort(numbers)
 	fmt.Printf("after sort heap numbers = %v\n", numbers)
-
 }

@@ -30,11 +30,7 @@ public class CircleList {
      * <h3>思路: 环形链表 II</h3>
      */
     public static ListNode detectCycle(ListNode head){
-        if (head == null || head.next == null) return null;
-
-        ListNode slow = head;
-        ListNode fast = head;
-
+        ListNode slow = head, fast = head;
         do {
            if (fast == null || fast.next == null) return null;
            fast = fast.next.next;

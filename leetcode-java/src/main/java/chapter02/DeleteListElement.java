@@ -18,9 +18,8 @@ public class DeleteListElement {
 
     /**
      * <h3>思路: 删除排序链表中的重复元素</h3>
-     * <h3>注: 移除官方题解, 我发现再写这道题的时候还是最原来的想法....</h3>
      */
-    private static ListNode removeDuplicates(ListNode head){
+    private static ListNode deleteDuplicates1(ListNode head){
         ListNode current = head;
         ListNode previous = new ListNode(Integer.MIN_VALUE, head);
         while (current != null){
@@ -34,12 +33,24 @@ public class DeleteListElement {
         return head;
     }
 
+    private static ListNode deleteDuplicates2(ListNode head){
+        ListNode current = head;
+        while (current.next != null){
+            if (current.value == current.next.value){
+                current.next = current.next.next;
+            }else{
+                current = current.next;
+            }
+        }
+        return head;
+    }
+
     /**
      * <h3>思路: 删除链表中的重复元素 II</h3>
      * <h3>注: 直接转换成第一题就可以</h3>
      * <h3>注: 官方题解的那种写法很容易出空指针异常, 也不好理解, 移除了</h3>
      */
-    private static ListNode deleteDuplicates1(ListNode head){
+    private static ListNode deleteDuplicates3(ListNode head){
         // 注: 防止要删除的结点就是头结点
         ListNode dummy = new ListNode(0, head);
         ListNode previous = dummy, current = head;
@@ -61,6 +72,22 @@ public class DeleteListElement {
             current = current.next;
         }
 
+        return dummy.next;
+    }
+
+    private static ListNode deleteDuplicates4(ListNode head){
+        ListNode dummy = new ListNode(0, head);
+        ListNode current = dummy;
+        while (current.next != null && current.next.next != null){
+            if (current.next.value == current.next.next.value){
+                int value = current.next.value;
+                while (current.next != null && current.next.value == value){
+                    current.next = current.next.next;
+                }
+            }else{
+                current = current.next;
+            }
+        }
         return dummy.next;
     }
 

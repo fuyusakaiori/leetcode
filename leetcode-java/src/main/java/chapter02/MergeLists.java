@@ -8,12 +8,7 @@ import utils.ListNode;
  * <p>2. 合并两个普通的链表</p>
  * <p>3. 合并 K 个升序链表</p>
  */
-public class MergeLists
-{
-    public static void main(String[] args)
-    {
-
-    }
+public class MergeLists {
 
     /**
      * <h3>思路: 哑元 + 比大小</h3>
@@ -67,19 +62,14 @@ public class MergeLists
     }
 
     /**
-     * <h3> 思路: </3>
-     * <h3>1. 遍历链表数组, 两个链表先合并得到排序的链表, 然后生成链表再和之后的链表合并, 时间复杂度为 O(n^2)</h3>
-     * <h3>2. 遍历链表数组, 但是两两合并, 合并的结果再两两合并, 类似于归并排序</h3>
-     * @param lists 链表数组
-     * @return 新的链表
+     * <h3> 思路: 合并 K 个有序链表</h3>
      */
     private static ListNode mergeKLists(ListNode[] lists){
-
         return fork(lists, 0, lists.length - 1);
     }
 
     private static ListNode fork(ListNode[] lists, int left, int right){
-        if (left == right)
+        if (left >= right)
             return lists[left];
         int mid = left + ((right - left) >> 1);
         ListNode leftList = fork(lists, left, mid);

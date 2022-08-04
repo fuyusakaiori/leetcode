@@ -5,12 +5,7 @@ import utils.ListNode;
 /**
  * <h2>旋转链表</h2>
  */
-public class RotationList
-{
-    public static void main(String[] args)
-    {
-
-    }
+public class RotationList {
 
     /**
      * <h3>思路: </h3>
@@ -18,31 +13,30 @@ public class RotationList
      * <h3>2. 然后继续遍历找到的尾结点, 然后将尾结点连接到旧的头结点, 最后返回新的头结点</h3>
      */
     private static ListNode rotateList(ListNode head, int k){
-        if (head == null || head.next == null)
+        if(head == null || head.next == null){
             return head;
-        // 注: 让慢指针从哑元开始就可以找到第一个中点
+        }
+        // 1. 获取移动的位置
+        int offset = k % getLength(head);
+        // 2. 找到第 k 个结点
         ListNode dummy = new ListNode(0, head);
-        ListNode slow = dummy;
-        ListNode fast = head;
-        // 注: K 是可以超过链表长度的, 需要模运算减小 K
-        if (k % getLength(head) == 0) return head;
-        for(int index = 0;index < k;index++){
+        ListNode fast = head, slow = dummy;
+        for(int index = 0;index < offset;index++){
             fast = fast.next;
         }
-        while (fast != null){
+        // 3. 找到倒数第 k 个结点
+        ListNode tail = fast;
+        while(fast != null){
+            if(fast.next == null){
+                tail = fast;
+            }
+            slow = slow.next;
             fast = fast.next;
-            slow = slow.next;
         }
-        ListNode previous = slow;
-        while (slow.next != null){
-            slow = slow.next;
-        }
-        ListNode nh = previous.next;
-        previous.next = null;
-        ListNode tail = slow;
-        tail.next = head;
-
-        return nh;
+        tail.next = dummy.next;
+        dummy.next = slow.next;
+        slow.next = null;
+        return dummy.next;
     }
 
     private static int getLength(ListNode head){

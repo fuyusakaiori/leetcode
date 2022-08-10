@@ -1,17 +1,34 @@
-package chapter11;
-
-import java.util.Arrays;
+package chapter11.dynamic;
 
 /**
  * <h2>子序列问题</h2>
- * <h3>1. 最长递增子序列</h3>
- * <h3>2. 最长公共子序列</h3>
- * <h3>3. 最长回文子序列</h3>
+ * <h3>1. 判断子序列</h3>
+ * <h3>2. 最长递增子序列</h3>
+ * <h3>3. 最长公共子序列</h3>
+ * <h3>4. 最长回文子序列</h3>
+ * <h3>5. 不同的子序列</h3>
  */
 public class Subsequence {
 
     /**
-     * <h3>思路: 最长递增子序列</h3>
+     * <h3>判断子序列</h3>
+     * <h3>核心: 双指针</h3>
+     */
+    public boolean isSubsequence(String s, String t) {
+        int first = 0, second = 0;
+        char[] sCharArray = s.toCharArray();
+        char[] tCharArray = t.toCharArray();
+        while(first < sCharArray.length && second < tCharArray.length){
+            if(sCharArray[first] == tCharArray[second])
+                first++;
+            second++;
+        }
+        return first == sCharArray.length;
+    }
+
+    /**
+     * <h3>思路: 最长递增子序列 (LIS) </h3>
+     * <h3>核心: ?</h3>
      */
     private static int lengthOfLIS1(int[] nums){
         int maxLength = 0;
@@ -29,8 +46,8 @@ public class Subsequence {
     }
 
     /**
-     * <h3>1、之前写的暴力解存在点问题, 因为在递归的时候使用了两个参数, 所以导致表结构也是二维的</h3>
-     * <h3>2、本着尽可能少用参数的原则, 可以在递归的外围添加循环, 从而减少参数的使用, 最终让表成为一维的</h3>
+     * <h3>1、此前写的暴力递归由于需要记录递增序列的结尾 -> 会使用两个变化参数 -> 动态规划表是二维的</h3>
+     * <h3>2、本着尽可能少用参数的原则: 可以在递归外围添加循环从而减少参数的使用, 最终让表成为一维的</h3>
      */
     private static int lengthOfLIS2(int[] nums){
         int maxLength = 0;
@@ -58,33 +75,8 @@ public class Subsequence {
     }
 
     /**
-     * <h3>1、这个解法就是利用尝试的思想来做的, 但是会使用两个参数, 这就导致表结构是二维的</h3>
-     * <h3>2、我暂时没有想明白这种做法为什么会非常慢, 难道是因为二维表？并且这个做法不好改成动态规划</h3>
-     * <h3>3、如果笔试记不得优化的解法, 那么这种解法一定要会, 但是面试记不住的话就噶了</h3>
-     */
-    private static int lengthOfLIS3(int[] nums){
-        int[][] dp = new int[nums.length + 1][nums.length];
-        for (int[] memory : dp) {
-            Arrays.fill(memory, -1);
-        }
-        return dfs(nums, -1, 0, dp);
-    }
-
-    private static int dfs(int[] nums, int previous, int index, int[][] dp){
-        if (index == nums.length)
-            return 0;
-        if (dp[previous + 1][index] != -1)
-            return dp[previous + 1][index];
-
-        int skip = dfs(nums, previous, index + 1, dp);
-        int get = 0;
-        if (previous == -1 || nums[previous] < nums[index])
-            get = dfs(nums, index, index + 1, dp) + 1;
-        return dp[previous + 1][index] = Math.max(skip, get);
-    }
-
-    /**
-     * <h3>思路: 最长公共子序列</h3>
+     * <h3>思路: 最长公共子序列 (LCS)</h3>
+     * <h3>核心: 双指针</h3>
      */
     private static int lengthOfLCS1(String text1, String text2){
         char[] fArray = text1.toCharArray(), sArray = text2.toCharArray();
@@ -118,7 +110,7 @@ public class Subsequence {
     }
 
     /**
-     * <h3>思路: 最长回文子序列</h3>
+     * <h3>思路: 最长回文子序列 (LPS)</h3>
      * <h3>1. 尝试思路</h3>
      * <h3>2. 镜像反转 + LCS</h3>
      * <h3>注: 在这里看到一个叫做区间动态规划的概念, 不太明白是什么</h3>
@@ -133,47 +125,42 @@ public class Subsequence {
 
     private static int lengthOfLPS2(String str){
         char[] chars = str.toCharArray();
-        int[][] dp = new int[chars.length + 1][chars.length + 1];
-
-        for (int left = chars.length - 1;left >= 0;left--){
-            for (int right = chars.length - 1;right >= left;right--){
-                if (left == right){
-                    dp[left][right] = 1;
+        int[][] dp = new int[chars.length][chars.length];
+        for (int first = chars.length - 1;first >= 0;first--){
+            // 注: 这里只能从左向右填, 依赖关系决定的
+            for (int second = first;second <= chars.length - 1;second++){
+                if (first == second){
+                    dp[first][second] = 1;
                     continue;
                 }
-                int noLeft = dp[left + 1][right];
-                int noRight = dp[left][right + 1];
-                int noLeftAndRight = dp[left + 1][right + 1];
-                noLeftAndRight += chars[left] == chars[right] ? 2: 0;
-                dp[left][right] = Math.max(noLeft, Math.max(noRight, noLeftAndRight));
+                if (chars[first] == chars[second]){
+                    dp[first][second] = dp[first + 1][second - 1] + 2;
+                }else{
+                    dp[first][second] = Math.max(dp[first + 1][second], dp[first][second - 1]);
+                }
             }
         }
-        return dp[0][0];
+        return dp[0][chars.length - 1];
     }
 
     private static int lengthOfLPS3(String str){
-        Integer[][] dp = new Integer[str.length()][str.length()];
+        int[][] dp = new int[str.length()][str.length()];
         return dfs(str.toCharArray(), 0, str.length() - 1, dp);
     }
 
-    private static int dfs(char[] chars, int left, int right, Integer[][] dp){
-        // 注: 只剩一个字符肯定就是回文字符了
+    private static int dfs(char[] chars, int left, int right, int[][] dp){
+        // 1. 左指针可能恰好和右指针相等 -> 单个字符肯定是回文字符串
         if (left == right)
             return 1;
+        // 2. 左指针大于右指针时 -> 肯定就不是回文字符串
         if (left > right)
             return 0;
-        if (dp[left][right] != null)
-            return dp[left][right];
-        // 1. 回文子序列不从左字符开始
-        int noLeft = dfs(chars, left + 1, right, dp);
-        // 2. 回文子序列不从右字符开始
-        int noRight = dfs(chars, left, right - 1, dp);
-        // 3. 回文子序列不从两侧开始
-        int noLeftAndRight = dfs(chars, left + 1, right - 1, dp);
-        // 4. 如果两侧的字符本来就相等, 那么需要加上去
-        noLeftAndRight += chars[left] == chars[right] ? 2: 0;
-
-        return dp[left][right] = Math.max(noLeft, Math.max(noRight, noLeftAndRight));
+        // 3. 如果两个字符相同, 那么肯定要作为回文子序列的一部分
+        if (chars[left] == chars[right])
+            return dp[left][right] = dfs(chars, left + 1, right - 1, dp);
+        // 4. 如果两个字符不等, 那么就尝试删除其中一个
+        return dp[left][right] = Math.max(dfs(chars, left + 1, right, dp),
+                dfs(chars, left, right + 1, dp));
     }
 
     /**
@@ -193,6 +180,49 @@ public class Subsequence {
             count += dp[index];
         }
         return count;
+    }
+
+    /**
+     * <h3>思路: 不同子序列的数量</h3>
+     * <h3>核心: 双指针</h3>
+     */
+    private static int numDistinct1(String s, String t){
+        char[] fArray = s.toCharArray();
+        char[] sArray = t.toCharArray();
+        int[][] dp = new int[fArray.length + 1][sArray.length + 1];
+        for (int index = 0;index < dp.length;index++){
+            dp[index][sArray.length] = 1;
+        }
+        for (int first = fArray.length - 1;first >= 0;first--){
+            for (int second = sArray.length - 1;second >= 0;second--){
+                if (fArray[first] == sArray[second]){
+                    dp[first][second] += dp[first + 1][second + 1];
+                }
+                dp[first][second] += dp[first + 1][second];
+            }
+        }
+        return dp[0][0];
+    }
+    public static int numDistinct2(String s, String t){
+        char[] fArray = s.toCharArray();
+        char[] sArray = t.toCharArray();
+        Integer[][] dp = new Integer[fArray.length][s.length()];
+        return dfs(0, fArray, 0, sArray, dp);
+    }
+
+    public static int dfs(int first, char[] fArray, int second, char[] sArray, Integer[][] dp){
+        if(second == sArray.length)
+            return 1;
+        if(first == fArray.length)
+            return 0;
+        if(dp[first][second] != null)
+            return dp[first][second];
+        int result = 0;
+        if(fArray[first] == sArray[second])
+            result = dfs(first + 1, fArray, second + 1, sArray, dp);
+        result += dfs(first + 1, fArray, second, sArray, dp);
+
+        return dp[first][second] = result;
     }
 
 

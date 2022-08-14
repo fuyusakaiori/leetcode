@@ -21,7 +21,7 @@ public class IslandProblem {
         int count = 0;
         for (int row = 0;row < grid.length;row++){
             for (int column = 0;column < grid[row].length;column++){
-                if (grid[row][column] == '1'){
+                if (grid[row][column] != '0'){
                     count++;
                     dfs(grid, row, column);
                     bfs(grid, row, column);
@@ -36,7 +36,7 @@ public class IslandProblem {
             return;
         if (grid[row][column] == '0')
             return;
-        grid[row][column] = '1';
+        grid[row][column] = '0';
         dfs(grid, row + 1, column);
         dfs(grid, row - 1, column);
         dfs(grid, row, column + 1);

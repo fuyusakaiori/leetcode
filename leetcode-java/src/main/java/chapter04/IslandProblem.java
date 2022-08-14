@@ -117,7 +117,9 @@ public class IslandProblem {
             return 0;
         grid[row][column] = 0;
 
-        return 1 + dfs(grid, row + 1, column) + dfs(grid, row - 1, column)
-                       + dfs(grid, row, column + 1) + dfs(grid, row, column - 1);
+        return 1 + dfs(grid, row + 1, column)
+                       + dfs(grid, row - 1, column)
+                       + dfs(grid, row, column + 1)
+                       + dfs(grid, row, column - 1);
     }
 }

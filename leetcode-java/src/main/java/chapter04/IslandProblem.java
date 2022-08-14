@@ -89,8 +89,10 @@ public class IslandProblem {
         if (grid[row][column] == '2')
             return 0;
         grid[row][column] = '2';
-        return dfs(row + 1, column, grid) + dfs(row - 1, column, grid)
-                       + dfs(row, column + 1, grid) + dfs(row, column - 1, grid);
+        return dfs(row + 1, column, grid)
+                       + dfs(row - 1, column, grid)
+                       + dfs(row, column + 1, grid)
+                       + dfs(row, column - 1, grid);
     }
 
     /**

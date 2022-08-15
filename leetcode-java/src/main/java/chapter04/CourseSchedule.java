@@ -4,223 +4,171 @@ import java.util.*;
 
 /**
  * <h2>图论算法: 拓扑排序</h2>
- * <h3>主要用于判断图中是否存在环</h3>
  * <h3>1. 课程表</h3>
  * <h3>2. 课程表 II</h3>
- * <h3>注: 从这个题基本就能够看出来在没有模板的情况下, 建图的过程可能会非常繁琐, 笔试时间肯定不够</h3>
- * <h3>注: 图的题目基本就不要太追求效率, 能解出来就行</h3>
+ * <h3>注: 有向图如果可以重复走到结点, 那么必然存在环</h3>
  */
 public class CourseSchedule {
 
-    /**
-     * <h3>思路: 课程表 </h3>
-     * <h3>1. 邻接矩阵: 适用于稠密图, 所以这里效率比较低</h3>
-     * <h3>2. 邻接表: 适用于稀疏图, 这里效率比较高</h3>
-     * <h3>3. 模板实现和邻接表效率较低, 但是好写</h3>
-     * <h3>注: 只是存储图的方式不同, 具体的算法是一致的</h3>
-     */
-    private static boolean findOrder1(int[][] requires, int numCourses){
-        Object[] params = getGraph(requires, numCourses);
-        int[] indegree = (int[]) params[0];
-        int[][] graph = (int[][]) params[1];
-        return dfs(graph) || bfs(indegree, graph);
-    }
+    //============================================== 邻接矩阵 ==============================================
 
     /**
-     * <h3>邻接矩阵存储图</h3>
+     * <h3>拓扑排序 / 广度优先遍历</h3>
      */
-    private static Object[] getGraph(int[][] requires, int numCourse){
-        int[] indegree = new int[numCourse];
-        int[][] graph = new int[numCourse][numCourse];
-        for (int[] require : requires){
-            graph[require[1]][require[0]] = 1;
-            indegree[require[0]]++;
+    private static boolean canFinish1(int numCourses, int[][] prerequisites){
+        // 1. 初始化邻接矩阵
+        int[] indegrees = new int[numCourses];
+        int[][] graph = new int[numCourses][numCourses];
+        for (int[] prerequisite : prerequisites) {
+            // 1.1 获取起点和终点
+            int to = prerequisite[0], from = prerequisite[1];
+            // 1.2 初始化路径
+            graph[from][to] = 1;
+            // 1.3 初始化入度
+            indegrees[to]++;
         }
-        return new Object[]{indegree, graph};
-    }
-
-    private static boolean bfs(int[] indegree, int[][] graph){
-        Queue<Integer> queue = new LinkedList<>();
-
-        for (int index = 0;index < indegree.length;index++){
-            if (indegree[index] == 0)
-                queue.offer(index);
+        // 2. 获取所有入度为零的结点
+        Queue<Integer> zeroQueue = new LinkedList<>();
+        for(int idx = 0;idx < indegrees.length;idx++){
+            if (indegrees[idx] == 0)
+                zeroQueue.offer(idx);
         }
+        // 3. 遍历图: 有向图除非有环, 否则不可能重复走到同一个结点
         int visited = 0;
-        while (!queue.isEmpty()){
-            int start = queue.poll();
-            for (int index = 0;index < graph[start].length;index++){
-                if (graph[start][index] == 1){
-                    if (--indegree[index] == 0)
-                        queue.offer(index);
+        while (!zeroQueue.isEmpty()){
+            int idx = zeroQueue.poll();
+            for (int next = 0;next < graph[idx].length;next++){
+                if (graph[idx][next] != 0){
+                    if (--indegrees[next] == 0){
+                        zeroQueue.offer(next);
+                    }
                 }
             }
             visited++;
         }
-        return visited == indegree.length;
+        // 4. 检测是否存在环
+        return visited == numCourses;
     }
 
-    private static boolean dfs(int[][] graph){
-        int[] visited = new int[graph.length];
-        for(int index = 0;index < graph.length;index++){
-            if(!dfs(graph, visited, index))
+    /**
+     * <h3>深度优先遍历</h3>
+     */
+    private static boolean canFinish2(int numCourses,  int[][] prerequisites){
+        // 1. 初始化图
+        int[][] graph = new int[numCourses][numCourses];
+        for (int[] prerequisite : prerequisites) {
+            int to = prerequisite[0], from = prerequisite[1];
+            graph[from][to] = 1;
+        }
+        // 2. 深度遍历: 只要不走到重复的, 那么就是没有环
+        int[] visited = new int[numCourses];
+        for (int idx = 0;idx < graph.length;idx++){
+            if (!dfs(idx, visited, graph))
                 return false;
         }
         return true;
     }
 
-    private static boolean dfs(int[][] graph, int[] visited, int start){
-        if(visited[start] == 1)
+    private static boolean dfs(int start, int[] visited, int[][] graph){
+        // 1. 如果是在访问值是 1 的期间再次走到, 那么就是其他路径造成的, 不是同一条路径造成的环
+        if (visited[start] == 1)
             return true;
-        if(visited[start] == -1)
+        // 2. 如果在访问值是 -1 的期间再次走到, 那么就认为造成环
+        if (visited[start] == -1)
             return false;
+        // 3. 标记结点第一次访问
         visited[start] = -1;
-        for(int index = 0;index < graph[start].length;index++){
-            if(graph[start][index] == 1){
-                if(!dfs(graph, visited, index))
+        for (int idx = 0;idx < graph.length;idx++){
+            if (graph[start][idx] != 0){
+                if (!dfs(idx, visited, graph))
                     return false;
             }
         }
+        // 4. 标记结点访问结束
         visited[start] = 1;
         return true;
     }
 
 
-    private static class GraphNode {
-        // 1. 结点的值
-        private final int course;
-        // 2. 结点的入度: 只有广度遍历会使用, 深度遍历是不会使用的
-        private int indegree;
-        // 3. 相邻结点
-        private final List<GraphNode> neighbors;
+    //============================================== 链式前向星 (邻接表) ==============================================
 
-        public GraphNode(int course){
-            this.course = course;
-            this.neighbors = new LinkedList<>();
-        }
-    }
+    private static int cnt = 0;
+    /**
+     * <h3>边的权重集合, 边的终点</h3>
+     */
+    private static int[] indegrees = new int[100010], tos = new int[5010];
 
     /**
-     * <h3>模板存储图</h3>
+     * <h3>边的终点, 边链表的下一条边</h3>
      */
-    private static Map<Integer, GraphNode> getGraph(int[][] requires){
-        Map<Integer, GraphNode> graph = new HashMap<>();
-        for (int[] require : requires) {
-            GraphNode prevNode = graph.getOrDefault(require[1], new GraphNode(require[1]));
-            GraphNode nextNode = graph.getOrDefault(require[0], new GraphNode(require[0]));
-            prevNode.neighbors.add(nextNode);
-            nextNode.indegree++;
-            graph.put(require[1], prevNode);
-            graph.put(require[0], nextNode);
-        }
-        return graph;
+    private static int[] heads = new int[100010], nexts = new int[5010];
+
+    private static void addEdge(int idx, int to){
+        tos[cnt] = to;
+        nexts[cnt] = heads[idx];
+        heads[idx] = cnt++;
     }
 
-    /**
-     * <h3>深度优先搜索</h3>
-     * <h3>注: 深度优先不需要使用入度</h3>
-     */
-    private static boolean dfs(int[][] requires, int numCourses){
+    private static boolean canFinish3(int numCourses,  int[][] prerequisites){
+        // 1. 初始化头结点
+        Arrays.fill(heads, -1);
+        // 2. 初始化图
+        for (int[] prerequisite : prerequisites) {
+            int from = prerequisite[1], to = prerequisite[0];
+            indegrees[to]++;
+            addEdge(from, to);
+        }
+        // 3. 获取所有度为零的结点
+        Queue<Integer> queue = new LinkedList<>();
+        for (int idx = 0; idx < numCourses; idx++) {
+            if (indegrees[idx] == 0)
+                queue.offer(idx);
+        }
+        // 4. 出队
+        int visited = 0;
+        while(!queue.isEmpty()){
+            int idx = queue.poll();
+            for (int next = heads[idx];next != -1;next = nexts[next]){
+                int to = tos[next];
+                if (--indegrees[to] == 0){
+                    queue.offer(to);
+                }
+            }
+            visited++;
+        }
+
+        return visited == numCourses;
+    }
+
+    private static boolean canFinish4(int numCourses, int[][] prerequisites){
+        // 1. 初始化头结点
+        Arrays.fill(heads, -1);
+        // 2. 初始化邻接矩阵
+        for (int[] prerequisite : prerequisites) {
+            addEdge(prerequisite[1], prerequisite[0]);
+        }
+        // 3. 深度遍历
         int[] visited = new int[numCourses];
-        Map<Integer, GraphNode> graph = getGraph(requires);
-
-        for (int course : graph.keySet()) {
-            if (!dfs(graph, visited, course))
+        for (int idx = 0; idx < numCourses; idx++) {
+            if (!dfs(idx, visited))
                 return false;
         }
         return true;
     }
 
-    private static boolean dfs(Map<Integer, GraphNode> graph, int[] visited, int course){
-        // 1. 表示这和结点已经被其他结点深度搜索过, 不需要重复搜索
-        if (visited[course] == 1)
+    private static boolean dfs(int start, int[] visited){
+        if (visited[start] == 1)
             return true;
-        // 2. 表示这个结点被重复搜索了, 也就是出现环了
-        if (visited[course] == -1)
+        if (visited[start] == -1)
             return false;
-        // 3. 为了防止在单次搜索中出现环, 需要将这个结点暂时置为 1
-        visited[course] = 1;
-        for (GraphNode neighbor : graph.get(course).neighbors){
-            if(!dfs(graph, visited, neighbor.course))
+        visited[start] = -1;
+        for (int idx = heads[start];idx != -1;idx = nexts[idx]){
+            if (!dfs(tos[idx], visited))
                 return false;
         }
-        // 4. 在单个结点深度搜索完成之后, 发现没有环就可以结束了
-        visited[course] = -1;
+        visited[start] = 1;
         return true;
     }
 
-    /**
-     * <h3>广度优先搜索</h3>
-     */
-    private static boolean bfs(int[][] requires){
-        Queue<GraphNode> queue = new LinkedList<>();
-        Map<Integer, GraphNode> graph = getGraph(requires);
-        // 1. 获取所有入度为零的结点
-        for (GraphNode node : graph.values()) {
-            if (node.indegree == 0)
-                queue.offer(node);
-        }
-        // 2. 开始遍历图
-        int count = 0;
-        while (!queue.isEmpty()){
-            GraphNode node = queue.poll();
-            for (GraphNode neighbor : node.neighbors) {
-                if (--neighbor.indegree == 0)
-                    queue.offer(neighbor);
-            }
-            // 3. 学习的课程数量增加
-            count++;
-        }
-        return count == graph.size();
-    }
-
-
-    /**
-     * <h3>思路: 课程表 II</h3>
-     */
-    private static int[] findOrder(int numCourses, int[][] prerequisites) {
-        Map<Integer, GraphNode> graph = getGraph(prerequisites, new boolean[numCourses]);
-        Queue<GraphNode> queue = new LinkedList<>();
-        for (GraphNode node : graph.values())
-        {
-            if (node.indegree == 0) queue.offer(node);
-        }
-        int index = 0;
-        int[] path = new int[numCourses];
-        while (!queue.isEmpty())
-        {
-            GraphNode node = queue.poll();
-            for (GraphNode next : node.neighbors)
-            {
-                if (--next.indegree == 0)
-                    queue.offer(next);
-            }
-            path[index++] = node.course;
-        }
-        return index == path.length ? path : new int[]{};
-    }
-
-    private static Map<Integer, GraphNode> getGraph(int[][] prerequisites, boolean[] visited)
-    {
-        Map<Integer, GraphNode> graph = new HashMap<>();
-        for (int[] prerequisite : prerequisites)
-        {
-            int first = prerequisite[0];
-            int second = prerequisite[1];
-            visited[first] = visited[second] = true;
-            GraphNode firstNode = graph.getOrDefault(first, new GraphNode(first));
-            GraphNode secondNode = graph.getOrDefault(second, new GraphNode(second));
-            firstNode.indegree++;
-            secondNode.neighbors.add(firstNode);
-            graph.put(first, firstNode);
-            graph.put(second, secondNode);
-        }
-        for (int index = 0; index < visited.length; index++)
-        {
-            if (!visited[index])
-                graph.put(index, new GraphNode(index));
-        }
-        return graph;
-    }
 
 }

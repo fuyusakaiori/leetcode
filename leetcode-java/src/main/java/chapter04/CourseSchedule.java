@@ -170,5 +170,36 @@ public class CourseSchedule {
         return true;
     }
 
+    /**
+     * <h3>课程表 II</h3>
+     */
+    private static int[] findOrder(int numCourses, int[][] prerequisites){
+        Arrays.fill(heads, -1);
+        for (int[] prerequisite : prerequisites) {
+            int from = prerequisite[1], to = prerequisite[0];
+            indegrees[to]++;
+            addEdge(from, to);
+        }
+        Queue<Integer> queue = new LinkedList<>();
+        for (int idx = 0; idx < numCourses; idx++) {
+            if (indegrees[idx] == 0)
+                queue.offer(idx);
+        }
+        int cur = 0;
+        int[] result = new int[numCourses];
+        while (!queue.isEmpty()){
+            int idx = queue.poll();
+            result[cur++] = idx;
+            for (int next = heads[idx];next != -1;next = nexts[next]){
+                int to = tos[next];
+                if (--indegrees[to] == 0){
+                    queue.offer(to);
+                }
+            }
+        }
+        return cur == numCourses ? result: new int[0];
+    }
+
+
 
 }

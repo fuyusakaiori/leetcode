@@ -68,5 +68,41 @@ public class Bipartite {
     }
 
 
+    /**
+     * <h3>并查集</h3>
+     */
+    private static boolean isBipartite3(int[][] graph){
+        int[] unionSet = getUnionSet(graph.length);
+        for (int start = 0; start < graph.length; start++) {
+            for (int cur = 0; cur < graph[start].length; cur++) {
+                // 1. 检查相邻结点和当前结点的父节点是否相同
+                if (find(unionSet, start) == find(unionSet, graph[start][cur]))
+                    return false;
+                // 2. 如果不同, 那么就合并所有的相邻结点: 起始节点和相邻结点的颜色肯定不同
+                union(unionSet, graph[start][0], graph[start][cur]);
+            }
+        }
+        return true;
+    }
+
+    private static int[] getUnionSet(int length){
+        int[] unionSet = new int[length];
+        for (int idx = 0; idx < unionSet.length; idx++) {
+            unionSet[idx] = idx;
+        }
+        return unionSet;
+    }
+
+    private static int find(int[] unionSet, int idx){
+        if (unionSet[idx] == idx)
+            return idx;
+        return unionSet[idx] = find(unionSet, unionSet[idx]);
+    }
+
+    private static void union(int[] unionSet, int first, int second){
+        unionSet[find(unionSet, second)] = unionSet[find(unionSet, first)];
+    }
+
+
 
 }

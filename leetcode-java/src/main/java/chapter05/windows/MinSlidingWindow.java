@@ -6,7 +6,8 @@ import java.util.Map;
 /**
  * <h3>最小覆盖子串</h3>
  */
-public class MinWindow {
+public class MinSlidingWindow
+{
 
     /**
      * <h3>思路: 最小覆盖子串</h3>

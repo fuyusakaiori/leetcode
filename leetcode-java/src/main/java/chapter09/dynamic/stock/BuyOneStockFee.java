@@ -7,7 +7,7 @@ public class BuyOneStockFee {
     /**
      * <h3>动态规划: 从左向右</h3>
      */
-    public int maxProfit1(int[] prices, int fee) {
+    public static int maxProfit1(int[] prices, int fee) {
         // 1. 表结构
         int[][] dp = new int[prices.length][2];
         // 2. basecase

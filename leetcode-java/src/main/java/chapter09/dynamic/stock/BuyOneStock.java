@@ -25,7 +25,7 @@ public class BuyOneStock {
     /**
      * <h3>从左到右</h3>
      */
-    public int maxProfit2(int[] prices){
+    public static int maxProfit2(int[] prices){
         // 1. 表结构: dp[i][j] 表示在股票价格为 prices[i] 的最佳利润
         int[][] dp = new int[prices.length][2];
         // 2. basecase

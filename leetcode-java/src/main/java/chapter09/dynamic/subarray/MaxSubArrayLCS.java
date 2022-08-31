@@ -42,4 +42,17 @@ public class MaxSubArrayLCS {
         return 1;
     }
 
+    /**
+     * <h3>贪心算法</h3>
+     */
+    private static int findLengthOfLCIS3(int[] nums){
+        int maxLength = 0, start = 0;
+        for (int index = 0;index < nums.length;index++){
+            if (index != 0 && nums[index - 1] >= nums[index])
+                start = index;
+            maxLength = Math.max(maxLength, index - start + 1);
+        }
+        return maxLength;
+    }
+
 }

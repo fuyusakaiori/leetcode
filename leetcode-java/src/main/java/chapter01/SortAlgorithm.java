@@ -17,7 +17,7 @@ public class SortAlgorithm {
     private static void selectSort(int[] nums){
         for (int first = 0; first < nums.length; first++) {
             int minIndex = first;
-            for (int second = 0; second < first; second++) {
+            for (int second = first + 1; second < nums.length; second++) {
                 if (nums[second] < nums[minIndex]){
                     minIndex = second;
                 }

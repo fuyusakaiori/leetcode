@@ -79,7 +79,7 @@ public class SortAlgorithm {
     private static void process(int[] numbers, int left, int right){
         if (left >= right)
             return;
-        swap(numbers, new Random().nextInt(right - left + 1), right);
+        swap(numbers, left + new Random().nextInt(right - left + 1), right);
         int[] partition = partition(numbers, left, right, numbers[right]);
         process(numbers, left, partition[0]);
         process(numbers, partition[1], right);

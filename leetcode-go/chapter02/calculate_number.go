@@ -1,6 +1,5 @@
 package main
 
-
 // 两数相加
 func addTwoNumbers(first *ListNode, second *ListNode) *ListNode {
 	carry, dummy := 0, new(ListNode)
@@ -54,8 +53,4 @@ func addTwoNumbersV2(first *ListNode, second *ListNode) *ListNode {
 		tail.Next = &ListNode{Val: carry}
 	}
 	return reverseListV1(dummy.Next)
-}
-
-func main() {
-
 }

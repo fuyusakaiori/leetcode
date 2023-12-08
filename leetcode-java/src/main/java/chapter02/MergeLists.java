@@ -2,6 +2,8 @@ package chapter02;
 
 import utils.ListNode;
 
+import java.util.PriorityQueue;
+
 /**
  * <h2>合并链表</h2>
  * <p>1. 合并两个有序链表</p>
@@ -65,6 +67,9 @@ public class MergeLists {
      * <h3> 思路: 合并 K 个有序链表</h3>
      */
     private static ListNode mergeKLists(ListNode[] lists){
+        if (lists.length == 0) {
+            return null;
+        }
         return fork(lists, 0, lists.length - 1);
     }
 
